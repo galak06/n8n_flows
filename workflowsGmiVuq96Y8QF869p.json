@@ -1,0 +1,704 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Replace Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Text": {
+      "main": [
+        []
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Create Product Catalogue",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Create Product Catalogue",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Create Product Catalogue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive1": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Product Catalogue",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Product Catalogue": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-10-04T13:58:54.859Z",
+  "id": "GmiVuq96Y8QF869p",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "AI Proposal Generator System",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "replaceText",
+        "presentationId": "={{ $json.id }}",
+        "textUi": {
+          "textValues": [
+            {
+              "text": "{{proposalTitle}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.proposalTitle }}"
+            },
+            {
+              "text": "{{descriptionName}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.descriptionName }}"
+            },
+            {
+              "text": "{{oneParagraphProblemSummary}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.oneParagraphProblemSummary }}"
+            },
+            {
+              "text": "{{solutionHeadingOne}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.solutionHeadingOne }}"
+            },
+            {
+              "text": "{{solutionHeadingTwo}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.solutionHeadingTwo }}"
+            },
+            {
+              "text": "{{solutionHeadingThree}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.solutionHeadingThree }}"
+            },
+            {
+              "text": "{{solutionDescriptionOne}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.solutionDescriptionOne }}"
+            },
+            {
+              "text": "{{solutionDescriptionTwo}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.solutionDescriptionTwo }}"
+            },
+            {
+              "text": "{{solutionDescriptionThree}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.solutionDescriptionThree }}"
+            },
+            {
+              "text": "{{shortScopeTitleOne}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.shortScopeTitleOne }}"
+            },
+            {
+              "text": "{{shortScopeTitleTwo}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.shortScopeTitleTwo }}"
+            },
+            {
+              "text": "{{shortScopeTitleThree}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.shortScopeTitleThree }}"
+            },
+            {
+              "text": "{{shortScopeDescriptionOne}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.shortScopeDescriptionOne }}"
+            },
+            {
+              "text": "{{shortScopeDescriptionTwo}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.shortScopeDescriptionTwo }}"
+            },
+            {
+              "text": "{{shortScopeDescriptionThree}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.shortScopeDescriptionThree }}"
+            },
+            {
+              "text": "{{milestoneOneDay}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.milestoneOneDay }}"
+            },
+            {
+              "text": "{{milestoneTwoDay}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.milestoneTwoDay }}"
+            },
+            {
+              "text": "{{milestoneThreeDay}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.milestoneThreeDay }}"
+            },
+            {
+              "text": "{{milestoneFourDay}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.milestoneFourDay }}"
+            },
+            {
+              "text": "{{milestoneDescriptionOne}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.milestoneDescriptionOne }}"
+            },
+            {
+              "text": "{{milestoneDescriptionTwo}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.milestoneDescriptionTwo }}"
+            },
+            {
+              "text": "{{milestoneDescriptionThree}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.milestoneDescriptionThree }}"
+            },
+            {
+              "text": "{{milestoneDescriptionFour}}",
+              "replaceText": "={{ $('OpenAI').item.json.message.content.milestoneDescriptionFour }}"
+            },
+            {
+              "text": "{{cost}}",
+              "replaceText": "={{ $('On form submission').item.json.Cost }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "72aed5aa-2d4e-4891-bdac-f49aec882e4b",
+      "name": "Replace Text",
+      "type": "n8n-nodes-base.googleSlides",
+      "position": [
+        768,
+        -96
+      ],
+      "typeVersion": 2,
+      "credentials": {
+        "googleSlidesOAuth2Api": {
+          "id": "OycGdfczocIJauen",
+          "name": "Google Slides account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o",
+          "cachedResultName": "GPT-4O"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are a helpful, intelligent writing assistant.",
+              "role": "system"
+            },
+            {
+              "content": "Your task is to generate a proposal using input data from a form. This proposal should be highly customized, specific, and high-quality, considering we're going to be sending it immediately after you're done.\n\nContext: we are an automation/no-code agency that develops systems revolving around growth, revenue ops, etc.\n\nThe proposal template we're using has many fields. You must return these fields in one JSON object.\n\nUse this format:\n\n{\n  \"proposalTitle\": \"\",\n  \"descriptionName\": \"\",\n  \"oneParagraphProblemSummary\": \"\",\n  \"solutionHeadingOne\": \"\",\n  \"solutionDescriptionOne\": \"\",\n  \"solutionHeadingTwo\": \"\",\n  \"solutionDescriptionTwo\": \"\",\n  \"solutionHeadingThree\": \"\",\n  \"solutionDescriptionThree\":\"\",\n  \"shortScopeTitleOne\": \"\",\n  \"shortScopeTitleTwo\": \"\",\n  \"shortScopeTitleThree\": \"\",\n  \"shortScopeDescriptionOne\": \"\",\n  \"shortScopeDescriptionTwo\": \"\",\n  \"shortScopeDescriptionThree\": \"\",\n  \"milestoneOneDay\": \"\",\n  \"milestoneTwoDay\": \"\",\n  \"milestoneThreeDay\": \"\",\n  \"milestoneFourDay\": \"\",\n  \"milestoneDescriptionOne\": \"\",\n  \"milestoneDescriptionTwo\": \"\",\n  \"milestoneDescriptionThree\": \"\",\n  \"milestoneDescriptionFour\": \"\"\n}\n\nRules:\n1. Use a spartan, casual tone of voice.\n2. Be to-the-point but professional—assume you're writing to a sophisticated audience.\n3. Ensure that all fields are filled out. Do not miss a field or leave any variables empty.\n4. Keep things short. If a field contains the term \"Description\" it should be no more than fourteen words. For \"descriptionName\" do not use title case."
+            },
+            {
+              "content": "{\n  \"companyName\":\"1SecondCopy\",\n  \"problem\": \"they can't generate leads. everything is referral based rn.\",\n  \"solution\": \"cold email lead gen system, client reactivation system, and best in class sales training for closing\",\n  \"scope\": \"1k/day cold email infra, 30k email leads, 4 weekly zoom sessions for sales training\",\n  \"currentDate\":\"Feb 4 2025\",\n  \"howSoon\": \"two months\",\n  \"depositCost\": \"$1,845\",\n}"
+            },
+            {
+              "content": "{\n  \"proposalTitle\": \"Lead Gen System for 1SecondCopy\n\",\n  \"descriptionName\": \"A simple, scalable lead generation system built to help grow your content efforts & connect you with the right people.\n\",\n  \"oneParagraphProblemSummary\": \"Right now, 1SecondCopy is struggling with an inability to generate qualified leads. The majority of your new clients are referral-based, which, while always nice to have, is not scalable nor is it reliable. Building an alternative strategy—one that allows you to take leads from cold -> close—is vital to the health and longevity of the company, and it's what we're going to help you with.\n\",\n  \"solutionHeadingOne\": \"Cold Outbound Lead Gen\",\n  \"solutionDescriptionOne\": \"We'll put in place a robust cold-email-based system for you using best practices.\",\n  \"solutionHeadingTwo\": \"Client Reactivation System\",\n  \"solutionDescriptionTwo\": \"We'll build a simple, but high-ROI reactivation system to let you extract value from pre-existing clients.\",\n  \"solutionHeadingThree\": \"Best-In-Class Sales Training\",\n  \"solutionDescriptionThree\": \"We'll train your team with world-class setting & closing mechanisms.\",\n  \"shortScopeTitleOne\": Cold email infrastructure that sends ~1K emails/day\",\n  \"shortScopeTitleTwo\": \"30K high-quality scraped email leads (included)\",\n  \"shortScopeTitleThree\": \"Four weekly one-hour sales training sessions over Zoom\",\n  \"shortScopeDescriptionOne\": \"12 domains, 36 mailboxes, DNS optimization, and warmups included.\",\n  \"shortScopeDescriptionTwo\": \"30,000 leads in your target market, delivered by CSV.\",\n  \"shortScopeDescriptionThree\": \"We'll take your sales team from 0->1.\",\n  \"milestoneOneDay\": \"February 8th, 2025\",\n  \"milestoneTwoDay\": \"February 28th, 2025\",\n  \"milestoneThreeDay\": \"March 10th, 2025\",\n  \"milestoneFourDay\":\"March 17th-April 1st, 2025\",\n  \"milestoneDescriptionOne\": \"Cold email system done & ready for warmup.\",\n  \"milestoneDescriptionTwo\": \"Cold email system fully warmed up & operational.\",\n  \"milestoneDescriptionThree\": \"10,000 outbound emails sent; analysis & training #1.\"\n  \"milestoneDescriptionFour\":\"One sales training per week alongside iteration & handoff.\"\n}",
+              "role": "assistant"
+            },
+            {
+              "content": "={\n  \"companyName\":\"{{ $json['Company Name'] }}\",\n  \"problem\": \"{{ $json.Problem }}\",\n  \"solution\": \"{{ $json.Solution}}\",\n  \"scope\": \"{{ $json.Scope }}\",\n  \"currentDate\":\"{{ $now.toLocaleString({ dateStyle: 'medium' }) }}\",\n  \"howSoon\": \"{{ $json['How soon?'] }}\",\n  \"depositCost\": \"{{ $json.Cost }}\",\n}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "id": "97050a13-8000-4314-ad29-cd37698e3b1c",
+      "name": "OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        256,
+        240
+      ],
+      "typeVersion": 1.6,
+      "credentials": {
+        "openAiApi": {
+          "id": "h7udaRt5UtnUXt5R",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1MSPNFJq3ZGpTGvgxzNOx8Eu3lp3RPJ9kRQ0REdokr70",
+          "mode": "id"
+        },
+        "name": "={{ $json.message.content.proposalTitle }}",
+        "options": {
+          "copyRequiresWriterPermission": false
+        }
+      },
+      "id": "38774032-3a01-46db-8b06-a032a4d8bbe0",
+      "name": "Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        560,
+        -96
+      ],
+      "typeVersion": 3,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "38zn9UvBzVImfZsw",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "=Re: Proposal for  {{ $('On form submission').item.json['Company Name'] }}",
+        "message": "=Hey {{ $('On form submission').item.json['First Name'] }},\n\nThanks for the great call earlier. I had a moment after our chat to put together a detailed proposal for you—please take a look at your earliest convenience and let me know your thoughts.\n\nYou'll find it here: https://docs.google.com/presentation/d/{{ $json.presentationId }}/edit\n\nIf you have any questions, just ask. I've also sent over an invoice for the project (just to keep things convenient) and we can get started anytime that's sorted.\n\nThanks,\n[YOUR NAME]",
+        "options": {}
+      },
+      "id": "d74825bb-486a-413b-bfb3-403e3c251459",
+      "name": "Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        640,
+        240
+      ],
+      "webhookId": "WEBHOOK_ID_WILL_BE_GENERATED",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "epqpesLIeJ5okWzW",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Sales Call Logging Form",
+        "formDescription": "This form logs a sales call & automatically generates a proposal.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "First Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Last Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Company Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "Website",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Problem",
+              "fieldType": "textarea",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Solution",
+              "fieldType": "textarea",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Scope",
+              "fieldType": "textarea",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Cost",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "How soon?",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "38f30e6f-29a1-42d0-b88b-71faa77cf239",
+      "name": "On form submission",
+      "type": "n8n-nodes-base.formTrigger",
+      "position": [
+        32,
+        240
+      ],
+      "webhookId": "WEBHOOK_ID_WILL_BE_GENERATED",
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "content": "## Google Slides AI Proposal Generator\n**This flow generates proposals using AI and the free Google Slides solution**.",
+        "height": 280,
+        "width": 1220
+      },
+      "id": "11849a54-47e9-4917-8bda-f04e37a55e65",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -128,
+        176
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 2. Load price offer categories",
+        "height": 827,
+        "width": 615,
+        "color": 7
+      },
+      "id": "6d937a5f-5e43-42f2-a58b-a228aa8f4f01",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -112,
+        912
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-small",
+        "options": {}
+      },
+      "id": "bfd8d979-3f2f-4882-a470-1c5a95b98126",
+      "name": "Embeddings OpenAI1",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "position": [
+        32,
+        1296
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "openAiApi": {
+          "id": "h7udaRt5UtnUXt5R",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.pages}} : {{$json.cost}}",
+        "options": {}
+      },
+      "id": "7f1c46a9-d08c-432d-8fa0-4d966b4f7e57",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "position": [
+        144,
+        1280
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "chunkSize": 2000,
+        "chunkOverlap": {},
+        "options": {}
+      },
+      "id": "e860cfb4-6e3a-4cdb-a70c-ecbc14c2a18f",
+      "name": "Recursive Character Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "position": [
+        144,
+        1504
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "memoryKey": "price_offer-1",
+        "clearStore": true
+      },
+      "id": "cc947727-7318-486e-9213-f69c65ba93fa",
+      "name": "Create Product Catalogue",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "position": [
+        48,
+        1024
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {}
+      },
+      "id": "1eecd21c-d771-46f5-82e1-f6f16f169f87",
+      "name": "Extract from File",
+      "type": "n8n-nodes-base.extractFromFile",
+      "position": [
+        -576,
+        1296
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1J3UhnD96iOVuZD1hNHGrxFo-NqXR7KHo0n6U20_9azI",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "11fba5d8-6f7f-4df5-898b-691506b21dc5",
+      "name": "Google Drive1",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        -864,
+        1296
+      ],
+      "typeVersion": 3,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "38zn9UvBzVImfZsw",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTool",
+      "typeVersion": 3,
+      "position": [
+        1104,
+        -80
+      ],
+      "id": "dc5247be-95e3-48f9-b6f0-2288527747a2",
+      "name": "Download file in Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "38zn9UvBzVImfZsw",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "query_product_brochure",
+        "description": "Call this tool to query the product brochure. Valid for the year 2024."
+      },
+      "id": "0f80aeed-7875-4758-b09b-9d25e60194bb",
+      "name": "Vector Store Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "position": [
+        1536,
+        448
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-small",
+        "options": {}
+      },
+      "id": "8471f450-52d3-45a3-a6cb-0e168c20fe42",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "position": [
+        1520,
+        848
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "openAiApi": {
+          "id": "h7udaRt5UtnUXt5R",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-2024-08-06",
+        "options": {}
+      },
+      "id": "90767bed-3792-4774-ae08-ec470f61dafc",
+      "name": "OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1792,
+        656
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "openAiApi": {
+          "id": "h7udaRt5UtnUXt5R",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "memoryKey": "price_offer-1"
+      },
+      "id": "120155dc-cbe2-4d61-a305-9fdc4c42ca3e",
+      "name": "Product Catalogue",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "position": [
+        1504,
+        688
+      ],
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "Cost": "$2,500",
+          "Email": "john@example.com",
+          "Scope": "Setup and 1 month training",
+          "Problem": "Low sales due to lead generation problems",
+          "Website": "www.example.com",
+          "Solution": "AI automation system for lead generation",
+          "formMode": "test",
+          "How soon?": "Within 2 weeks",
+          "Last Name": "Doe",
+          "First Name": "John",
+          "submittedAt": "2025-05-13T09:10:33.001+01:00",
+          "Company Name": "Example Corp"
+        }
+      }
+    ]
+  },
+  "repo_name": "n8n_flows",
+  "repo_owner": "galak06",
+  "repo_path": "workflows",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-10-04T13:58:54.862Z",
+      "createdAt": "2025-10-04T13:58:54.862Z",
+      "role": "workflow:owner",
+      "workflowId": "GmiVuq96Y8QF869p",
+      "projectId": "YaGVPyA24kD9PXTE"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-10-04T16:42:01.000Z",
+  "versionId": "0060a922-0b81-4638-8578-376691ebefb8"
+}
