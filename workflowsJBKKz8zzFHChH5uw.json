@@ -1,0 +1,116 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Facebook Graph API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-01-23T14:47:09.158Z",
+  "id": "JBKKz8zzFHChH5uw",
+  "isArchived": true,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        0
+      ],
+      "id": "842f159b-50aa-4676-aec6-f2ca78188fe0",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "graphApiVersion": "v23.0",
+        "node": "me",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        0
+      ],
+      "id": "3fa141ff-6c93-4df2-9e7d-57d5de3c999b",
+      "name": "Facebook Graph API",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "Io9g3xuZhyFjISX8",
+          "name": "Dog&Fun"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v19.0/me/feed",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message",
+              "value": "🐾 Nalla's Tip of the Day: Fresh water is better than coffee! #DogFoodAndFun #Nalla"
+            },
+            {
+              "name": "link",
+              "value": "https://dogfoodandfun.padushka.com/"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0f767d51-5008-44f1-bc05-03965b589e8c",
+      "name": "Post to Facebook Page",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -224,
+        -224
+      ],
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "Io9g3xuZhyFjISX8",
+          "name": "Dog&Fun"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n_flows",
+  "repo_owner": "galak06",
+  "repo_path": "workflows",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-01-23T14:47:09.161Z",
+      "createdAt": "2026-01-23T14:47:09.161Z",
+      "role": "workflow:owner",
+      "workflowId": "JBKKz8zzFHChH5uw",
+      "projectId": "YaGVPyA24kD9PXTE"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-01-31T08:39:43.000Z",
+  "versionId": "ef70a3ec-1712-4b69-858e-0b5f99bb804c"
+}
