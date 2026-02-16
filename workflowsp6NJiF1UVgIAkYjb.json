@@ -1,0 +1,3039 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2026-01-17T16:47:26.000Z",
+    "createdAt": "2026-01-17T16:47:19.069Z",
+    "versionId": "83215e5b-de91-40d3-b32b-484bbb5f7047",
+    "workflowId": "p6NJiF1UVgIAkYjb",
+    "nodes": [
+      {
+        "parameters": {
+          "title": "={{ $('Generate AI Content').item.json.message.content.title }}",
+          "additionalFields": {
+            "content": "={{ \n/* 1. HERO IMAGE (With Safety Check) */\n$('Automated Image Retrieval from Pexels').item.json.photos && $('Automated Image Retrieval from Pexels').item.json.photos.length > 0 \n? \n'<img src=\"' + $('Automated Image Retrieval from Pexels').item.json.photos[0].src.landscape + '\" alt=\"' + ($('Generate AI Content').item.json.keywords ? $('Generate AI Content').item.json.keywords[0] : 'Dog Tip') + '\" style=\"width:100%; height:auto; border-radius: 8px; margin-bottom: 24px;\">' \n: \n'' \n}}\n\n<br><br>\n\n{{ \n/* 2. MAIN ARTICLE CONTENT */\n/* Checks for flat content first, then nested path */\n$('Generate AI Content').item.json.content || $('Generate AI Content').item.json.message.content.content \n}}\n\n<br><hr>\n\n<p><strong>Tags:</strong> \n{{ \n/* 3. HASHTAGS */\n/* Checks for flat keywords first, then nested path, then handles the map */\n(\n  $('Generate AI Content').item.json.keywords || \n  $('Generate AI Content').item.json.message.content.keywords || \n  []\n).map(k => '#' + k.replace(/ /g, '')).join(' ') \n}}\n</p>",
+            "slug": "={{ $('Generate AI Content').item.json.message.content.slug }}",
+            "status": "draft",
+            "categories": "={{ $json.id }}",
+            "tags": "="
+          }
+        },
+        "id": "b20f4d6a-37b9-40ed-80de-9c679d44b8cb",
+        "name": "Create posts on Wordpress",
+        "type": "n8n-nodes-base.wordpress",
+        "position": [
+          1440,
+          416
+        ],
+        "typeVersion": 1,
+        "alwaysOutputData": false,
+        "credentials": {
+          "wordpressApi": {
+            "id": "BLvROD2lSVQVPpRK",
+            "name": "Wordpress account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "content": "{{ $json.prompt }}",
+          "height": 892.7656453715782,
+          "width": 607.503259452412
+        },
+        "id": "c2e6573b-fb15-419f-b845-ea1b74c82407",
+        "name": "Sticky Note",
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -544,
+          -736
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "minutes",
+                "minutesInterval": 1
+              }
+            ]
+          }
+        },
+        "id": "ffa9e2c6-64be-49a1-9d34-c58a3a1d9cc8",
+        "name": "1. Auto Start",
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "position": [
+          -288,
+          -448
+        ],
+        "typeVersion": 1.2,
+        "disabled": true
+      },
+      {
+        "parameters": {},
+        "id": "b7f180c3-2cbb-486c-9ff8-a1996a6378fd",
+        "name": "2. When clicking ‘Test workflow’",
+        "type": "n8n-nodes-base.manualTrigger",
+        "position": [
+          -288,
+          -224
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "weeks",
+                "triggerAtHour": "={{ 8 }}"
+              }
+            ]
+          }
+        },
+        "id": "400286bd-a8b2-4d00-8104-9562e4f14788",
+        "name": "3. Schedule Your Posts",
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "position": [
+          -288,
+          0
+        ],
+        "typeVersion": 1.2
+      },
+      {
+        "parameters": {
+          "content": "## AI Content Generating\n\n**Automatic Content & Keyword Generation\n\n- Use your own prompt to start\n- ChatGPT generates full-length articles with structured headings.\n- Extracts relevant image search keywords for visual enhancement.\n- To implement this, add the following prompt (green note) below your workflow:\n",
+          "height": 271.4285686334568,
+          "width": 351.77682676671327
+        },
+        "id": "99c1d7a9-b62b-4e54-a4d3-ab5372585db7",
+        "name": "Sticky Note1",
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -48,
+          -16
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "content": "(YOUR PROMPT)\n\n**Image Search Keywords (For Visual Alignment)**\n\n- Automatically generates 3-5 English keywords for image searches based on the article content.\n- Keywords should be specific objects, locations, or atmospheres rather than abstract concepts.\n\n**Article Formatting Requirements**\n\n1️⃣ Title (H1): Ensure unique and trend-driven headlines.\n2️⃣ H2 / H3 Subheadings: Structure content in an SEO-optimized format.\n3️⃣ Article Structure (Enhanced Readability)\n\n** Introduction **\n- Go straight to the point, avoiding excessive background.\n- Use question hooks or market trend data to engage readers.\n\n** Core Content **\n- Include at least three knowledge points to ensure depth.\n- Balance short and long sentences for better flow.\n\n** Conclusion **\n- Avoid generic AI-style summaries; instead, provide insights or actionable takeaways.\n- Optionally include a CTA (Call to Action).\n\n** HTML Formatting **\nEnsure the article is properly structured in HTML format:\n- Headings: Use <h1>, <h2>, <h3> appropriately.\n- Paragraphs: Enclose text within <p>.\n- Emphasized Words: Use <strong> to highlight key terms.\n- Lists: Use <ul> and <li> for bullet points.\n\nEnsure a clean, well-structured output instead of plain text.\n\n### **Final JSON Format\nEnsure the output follows this structure:\n\n{\n  \"title\": \"{Generate an H1 title that aligns with market trends, ensures high click-through rates, and follows keyword strategy}\",\n  \"content\": \"{Generate a complete HTML article including H1, H2, H3 headings, paragraphs, lists, etc.}\",\n  \"keywords\": [\"{Image search keyword 1}\", \"{Image search keyword 2}\", \"{Image search keyword 3}\", \"{Image search keyword 4}\", \"{Image search keyword 5}\"]\n}",
+          "height": 1277.4269457977707,
+          "width": 349.47344203333904,
+          "color": 4
+        },
+        "id": "9ab0b900-a976-48fa-a9a1-4d48e11b2b91",
+        "name": "Sticky Note2",
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -48,
+          288
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "content": "## Google Sheet Setting\n**You need to set up these in your sheet column** \n- title\n- content\n- image search keyword\n\n**Mapping \"Values to Send\"**\n- {{ $json.message.content.title }}\n- {{ $json.message.content.content }}\n- {{ $json.message.content.keywords.join(\"+\") }}",
+          "height": 267.17005729996885,
+          "width": 367.1064142931126
+        },
+        "id": "7eeb978f-9473-4920-9c7b-b23a45e5c60c",
+        "name": "Sticky Note3",
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          320,
+          -16
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "url": "=https://api.pexels.com/v1/search?per_page=1&orientation=landscape&query={{ $json.message.content.keywords }}",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {}
+            ]
+          },
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "RYksW3HnHTtFLCbuSxcarG5f7GYSnxel2fRrdU8FewDUiNbcwmXxWbtS"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "8006e6d5-80b1-4348-a208-4e00eb660bc5",
+        "name": "Automated Image Retrieval from Pexels",
+        "type": "n8n-nodes-base.httpRequest",
+        "position": [
+          512,
+          -224
+        ],
+        "typeVersion": 4.2
+      },
+      {
+        "parameters": {
+          "content": "## Introduction: WordPress automatically publishes posts and inserts the first image\n\nIt is **highly recommended to install the Featured Image from URL (FIFU) plugin** and enable:\n\n**Auto > Set Featured Media Automatically from Content.** before you generate contents.",
+          "height": 211.65896369815192,
+          "width": 608.0701163493336,
+          "color": 3
+        },
+        "id": "753b2aa3-2b10-4f13-af62-b2acd00ce92f",
+        "name": "Sticky Note4",
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -544,
+          -656
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "content": "Add your API credential",
+          "height": 170.00764454070014,
+          "width": 348.08256103956126
+        },
+        "id": "c0332612-dbc2-44f8-b0c8-0d666b8bf7ba",
+        "name": "Sticky Note5",
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          112,
+          -240
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "content": "Add your API credential",
+          "height": 170.00764454070008,
+          "width": 150
+        },
+        "id": "5ea4ae8c-0516-441a-bff2-3f9d7309a075",
+        "name": "Sticky Note6",
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          320,
+          -240
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "content": "Add your API credential",
+          "height": 172.00917344884022,
+          "width": 201.97095074533956
+        },
+        "id": "217064b6-55f9-4a16-82f4-0a1e9f4a3903",
+        "name": "Sticky Note7",
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          464,
+          -240
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "modelId": {
+            "__rl": true,
+            "mode": "list",
+            "value": "gpt-4o",
+            "cachedResultName": "GPT-4O"
+          },
+          "messages": {
+            "values": [
+              {
+                "content": "=You are an expert Pet Nutritionist and SEO Content Strategist.\n\n**INPUT DATA:**\n- **Topic:** {{ $json.Topic }}\n- **Target Keyword:** {{ $json.Target_Keyword }}\n- **Personal Story (Context):** {{ $json.Nalla_Context }}\n- **Post Goal:** {{ $json.Post_Goal }}\n\n# MANDATORY: PRE-COMPUTATION STEPS\n1. **Analyze Unique Angles:** Identify specific breeds or life stages.\n2. **Title Strategy:** Create a catchy title (Max 60 chars) with the Target Keyword. NO \"Ultimate Guide\".\n3. **Visual Strategy:** Create a descriptive search phrase for a stock photo.\n\n# CONTENT REQUIREMENTS\n- **Length:** 1000-1500 words.\n- **Tone:** Authoritative yet conversational.\n- **Personal Touch:** Weave the \"Personal Story (Context)\" into the Introduction.\n- **Real Products (NEW):** When recommending solutions, mention 2-3 REAL, top-rated brand names (e.g., Zymox, Kong, Wellness, Blue Buffalo). Explain WHY they are good. **DO NOT include URLs** (I will add affiliate links manually).\n- **Data:** Use real stats (AKC, FEDIAF).\n- **Format:** HTML only (h2, h3, p, ul, li, table, blockquote).\n\n# ARTICLE STRUCTURE (HTML)\n1. **Introduction:** Hook + Nalla's Story + Article Goal.\n2. **Core Content:** 4-6 sections using <h3>.\n3. **Product Spotlight:** A specific section titled \"Top Rated Products for [Topic]\" listing specific brands/models to try.\n4. **Comparison Table:** A <table> comparing ingredients/features of these product types.\n5. **FAQ Section:** 5-7 Q&A.\n6. **Conclusion:** 3 key takeaways.\n7. **Biblical Wisdom:** Quote Proverbs 12:10 or similar + reflection.\n\n# OUTPUT FORMAT (STRICT JSON)\nYou must output ONLY valid JSON. Do not use markdown code blocks.\n\n{\n  \"title\": \"Your catchy SEO title (Max 60 chars)\",\n  \"slug\": \"your-short-url-slug (max 4 words, lowercase, hyphens only)\",\n  \"excerpt\": \"A compelling meta description (150-160 chars) including the keyword\",\n  \"content\": \"The full HTML article string\",\n  \"image_search\": \"The descriptive sentence for Pexels\",\n  \"keywords\": [\"tag1\", \"tag2\", \"tag3\", \"tag4\", \"tag5\"]\n}"
+              }
+            ]
+          },
+          "jsonOutput": true,
+          "options": {
+            "temperature": 0.9
+          }
+        },
+        "id": "ad944e4e-a4f1-4f1b-8c93-2a4b5b3efeb8",
+        "name": "Generate AI Content",
+        "type": "@n8n/n8n-nodes-langchain.openAi",
+        "position": [
+          160,
+          -224
+        ],
+        "typeVersion": 1.6,
+        "credentials": {
+          "openAiApi": {
+            "id": "h7udaRt5UtnUXt5R",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "=1_GmIsHDd1y1hNSCx4S97l35UMFUNQX4NZSyTDlUxjsI"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "publish_posts",
+            "mode": "name"
+          },
+          "columns": {
+            "mappingMode": "autoMapInputData",
+            "value": {},
+            "matchingColumns": [
+              "id"
+            ],
+            "schema": [
+              {
+                "id": "id",
+                "displayName": "id",
+                "required": false,
+                "defaultMatch": true,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "date",
+                "displayName": "date",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "date_gmt",
+                "displayName": "date_gmt",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "guid",
+                "displayName": "guid",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "modified",
+                "displayName": "modified",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "modified_gmt",
+                "displayName": "modified_gmt",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "password",
+                "displayName": "password",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "slug",
+                "displayName": "slug",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "status",
+                "displayName": "status",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "type",
+                "displayName": "type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "link",
+                "displayName": "link",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "title",
+                "displayName": "title",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "content",
+                "displayName": "content",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "excerpt",
+                "displayName": "excerpt",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "author",
+                "displayName": "author",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "featured_media",
+                "displayName": "featured_media",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "comment_status",
+                "displayName": "comment_status",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "ping_status",
+                "displayName": "ping_status",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "sticky",
+                "displayName": "sticky",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "template",
+                "displayName": "template",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "format",
+                "displayName": "format",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "meta",
+                "displayName": "meta",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "categories",
+                "displayName": "categories",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "tags",
+                "displayName": "tags",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "permalink_template",
+                "displayName": "permalink_template",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "generated_slug",
+                "displayName": "generated_slug",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "class_list",
+                "displayName": "class_list",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "uagb_featured_image_src",
+                "displayName": "uagb_featured_image_src",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "uagb_author_info",
+                "displayName": "uagb_author_info",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "uagb_comment_info",
+                "displayName": "uagb_comment_info",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "uagb_excerpt",
+                "displayName": "uagb_excerpt",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "_links",
+                "displayName": "_links",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          1344,
+          -224
+        ],
+        "id": "a533aea6-1061-4780-9c27-b151e66580eb",
+        "name": "Append row in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "lQ7j3YxfduLFXixz",
+            "name": "Cohen"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1_GmIsHDd1y1hNSCx4S97l35UMFUNQX4NZSyTDlUxjsI",
+            "mode": "id"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "posts",
+            "mode": "name"
+          },
+          "options": {}
+        },
+        "id": "19ff8b33-4a84-44bc-80f4-75f3a5e08a70",
+        "name": "Read Input Sheet",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4,
+        "position": [
+          -592,
+          432
+        ],
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "lQ7j3YxfduLFXixz",
+            "name": "Cohen"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "const rows = $input.all();\n\n// 1. Filter: Get a list of ALL rows that are not yet processed\n// (We look for Input == 0)\nconst candidates = rows.filter(row =>\n  row.json.Input == 0 || row.json.Input === '0'\n);\n\n// 2. Check if we have any candidates left\nif (candidates.length > 0) {\n  \n  // 3. The Magic: Pick a RANDOM number between 0 and the list length\n  const randomIndex = Math.floor(Math.random() * candidates.length);\n\n  // 4. Return the single random row we picked\n  return [candidates[randomIndex]];\n\n} else {\n  \n  // Return indicator only if all are processed\n  return [{\n    json: {\n      all_inputs_are_1: true,\n      message: 'All rows are processed',\n    }\n  }];\n}"
+        },
+        "id": "f95b55f0-ae93-4bdb-a346-8b138d6a83c1",
+        "name": "Select First Unprocessed Row",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -416,
+          432
+        ]
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "1_GmIsHDd1y1hNSCx4S97l35UMFUNQX4NZSyTDlUxjsI",
+            "mode": "id"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "publish_posts",
+            "mode": "name"
+          },
+          "columns": {
+            "mappingMode": "autoMapInputData",
+            "value": {},
+            "matchingColumns": [
+              "id"
+            ],
+            "schema": [
+              {
+                "id": "id",
+                "displayName": "id",
+                "required": false,
+                "defaultMatch": true,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "date",
+                "displayName": "date",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "date_gmt",
+                "displayName": "date_gmt",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "guid",
+                "displayName": "guid",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "modified",
+                "displayName": "modified",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "modified_gmt",
+                "displayName": "modified_gmt",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "password",
+                "displayName": "password",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "slug",
+                "displayName": "slug",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "status",
+                "displayName": "status",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "type",
+                "displayName": "type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "link",
+                "displayName": "link",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "title",
+                "displayName": "title",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "content",
+                "displayName": "content",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "excerpt",
+                "displayName": "excerpt",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "author",
+                "displayName": "author",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "featured_media",
+                "displayName": "featured_media",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "comment_status",
+                "displayName": "comment_status",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "ping_status",
+                "displayName": "ping_status",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "sticky",
+                "displayName": "sticky",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "template",
+                "displayName": "template",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "format",
+                "displayName": "format",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "meta",
+                "displayName": "meta",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "categories",
+                "displayName": "categories",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "tags",
+                "displayName": "tags",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "permalink_template",
+                "displayName": "permalink_template",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "generated_slug",
+                "displayName": "generated_slug",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "class_list",
+                "displayName": "class_list",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "uagb_featured_image_src",
+                "displayName": "uagb_featured_image_src",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "uagb_author_info",
+                "displayName": "uagb_author_info",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "uagb_comment_info",
+                "displayName": "uagb_comment_info",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "uagb_excerpt",
+                "displayName": "uagb_excerpt",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "_links",
+                "displayName": "_links",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "id": "ea166925-066c-4762-963d-7b61ea938f24",
+        "name": "Mark as Processed (input = 1)",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4,
+        "position": [
+          1616,
+          -224
+        ],
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "lQ7j3YxfduLFXixz",
+            "name": "Cohen"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "8266da8f-3169-4350-be89-b0d7f0b17093",
+                "leftValue": "={{ $json.all_inputs_are_1 }}",
+                "rightValue": "=1",
+                "operator": {
+                  "type": "boolean",
+                  "operation": "true",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          -256,
+          432
+        ],
+        "id": "d35359df-534b-4355-adeb-9ff597a6e90e",
+        "name": "If"
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1_GmIsHDd1y1hNSCx4S97l35UMFUNQX4NZSyTDlUxjsI",
+            "mode": "id"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "posts",
+            "mode": "name"
+          },
+          "options": {}
+        },
+        "id": "0119c73d-2a24-49f5-b11f-ed1bffeadfd1",
+        "name": "Read Input Sheet1",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4,
+        "position": [
+          -576,
+          640
+        ],
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "lQ7j3YxfduLFXixz",
+            "name": "Cohen"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3,
+        "position": [
+          -800,
+          448
+        ],
+        "id": "4fe2d239-ae94-4219-963f-90ba082885b1",
+        "name": "Loop Over Items"
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "documentId": {
+            "__rl": true,
+            "value": "1_GmIsHDd1y1hNSCx4S97l35UMFUNQX4NZSyTDlUxjsI",
+            "mode": "list",
+            "cachedResultName": "n8n_fun_dog_content",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GmIsHDd1y1hNSCx4S97l35UMFUNQX4NZSyTDlUxjsI/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 799238859,
+            "mode": "list",
+            "cachedResultName": "posts",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GmIsHDd1y1hNSCx4S97l35UMFUNQX4NZSyTDlUxjsI/edit#gid=799238859"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Status": "publish",
+              "Input": "=1",
+              "row_number": "={{ $json.row_number }}"
+            },
+            "matchingColumns": [
+              "row_number"
+            ],
+            "schema": [
+              {
+                "id": "Category",
+                "displayName": "Category",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Topic",
+                "displayName": "Topic",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Target_Keyword",
+                "displayName": "Target_Keyword",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Nalla_Context",
+                "displayName": "Nalla_Context",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Post_Goal",
+                "displayName": "Post_Goal",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Status",
+                "displayName": "Status",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Input",
+                "displayName": "Input",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "row_number",
+                "displayName": "row_number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true,
+                "readOnly": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -976,
+          448
+        ],
+        "id": "cfc54916-a020-4c29-86ea-0a70e384a29c",
+        "name": "Update row in sheet1",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "lQ7j3YxfduLFXixz",
+            "name": "Cohen"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "return [\n  {\n    json: {\n      name: \"Grooming\",\n      slug: \"grooming\",\n      description: \"Essential tips and guides for brushing, bathing, nail trimming, and keeping your dog's coat healthy and clean.\"\n    }\n  },\n  {\n    json: {\n      name: \"Food & Diet\",\n      slug: \"food-and-diet\",\n      description: \"Expert nutrition advice, dog food reviews, and dietary plans to ensure your pet stays healthy at every life stage.\"\n    }\n  },\n  {\n    json: {\n      name: \"Training\",\n      slug: \"training\",\n      description: \"Practical behavior guides, obedience techniques, and training hacks to help you raise a well-mannered and happy dog.\"\n    }\n  },\n  {\n    json: {\n      name: \"Lifestyle & Gear\",\n      slug: \"lifestyle-and-gear\",\n      description: \"Reviews of the best dog toys, beds, and accessories, plus advice on traveling and living an active life with your pet.\"\n    }\n  }\n];"
+        },
+        "id": "039f8018-0aac-466f-8843-ef065729ea0e",
+        "name": "Define Categories",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          416,
+          -880
+        ]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://dogfoodandfun.padushka.com/wp-json/wp/v2/categories",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "wordpressApi",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "name",
+                "value": "={{ $json.name }}"
+              },
+              {
+                "name": "slug",
+                "value": "={{ $json.slug }}"
+              },
+              {
+                "name": "description",
+                "value": "={{ $json.description }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "623dcf40-656b-4638-b70d-982ca7ea3751",
+        "name": "Create Categories HTTP",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [
+          688,
+          -880
+        ],
+        "credentials": {
+          "wordpressApi": {
+            "id": "BLvROD2lSVQVPpRK",
+            "name": "Wordpress account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "content": "## Create categories in wordpress \n",
+          "height": 368,
+          "width": 656
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          368,
+          -976
+        ],
+        "typeVersion": 1,
+        "id": "70dde5e9-b16b-4e12-bd5b-093b3a2677bd",
+        "name": "Sticky Note8"
+      },
+      {
+        "parameters": {
+          "url": "https://dogfoodandfun.padushka.com/wp-json/wp/v2/categories",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "wordpressApi",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "slug",
+                "value": "={{ $('Select First Unprocessed Row').item.json.Category.toLowerCase().replace(' & ', '-and-').replace(/ /g, '-') }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.3,
+        "position": [
+          880,
+          -224
+        ],
+        "id": "716fe9ad-1804-400e-b6dd-2f9e0f65a000",
+        "name": "Find Category ID",
+        "credentials": {
+          "wordpressApi": {
+            "id": "BLvROD2lSVQVPpRK",
+            "name": "Wordpress account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://dogfoodandfun.padushka.com/wp-json/wp/v2/posts",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "wordpressApi",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ $json }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.3,
+        "position": [
+          1328,
+          -480
+        ],
+        "id": "e553db25-1fd1-46fd-bc80-3d53db56c3c1",
+        "name": "Find Category ID1",
+        "credentials": {
+          "wordpressApi": {
+            "id": "BLvROD2lSVQVPpRK",
+            "name": "Wordpress account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// 1. Grab Data Safely\nconst aiItem = $('Generate AI Content').first();\nconst pexelsItem = $('Automated Image Retrieval from Pexels').first();\nconst catItem = $('Find Category ID').first();\nconst rawAi = aiItem ? aiItem.json : {};\n\n// 2. DETECTIVE WORK: Find the AI Content 🕵️‍♂️\nlet aiData = {};\nif (rawAi.title) {\n    aiData = rawAi;\n} else if (rawAi.message && rawAi.message.content) {\n    const content = rawAi.message.content;\n    if (typeof content === 'string' && content.trim().startsWith('{')) {\n        try {\n            const cleanJson = content.replace(/```json/g, '').replace(/```/g, '');\n            aiData = JSON.parse(cleanJson);\n        } catch (e) { aiData = { content: content }; }\n    } else if (typeof content === 'object') {\n        aiData = content;\n    }\n}\n\n// 3. Setup Defaults\nconst title = aiData.title || rawAi.Topic || \"Dog Tips\";\n// Use the original Target Keyword from the start of the flow if available\nconst focusKeyword = rawAi.Target_Keyword || (aiData.keywords ? aiData.keywords[0] : \"Dogs\");\nconst slug = aiData.slug || \"dog-post-\" + Math.floor(Math.random() * 1000);\nconst excerpt = aiData.excerpt || \"Learn more about \" + focusKeyword;\nconst keywords = aiData.keywords || [\"Dogs\"];\n\n// 4. Build Hero Image\nlet heroImage = \"\";\nconst pexelsData = pexelsItem ? pexelsItem.json : {};\nif (pexelsData.photos && pexelsData.photos.length > 0) {\n   const imageUrl = pexelsData.photos[0].src.landscape;\n   heroImage = `<img src=\"${imageUrl}\" alt=\"${focusKeyword}\" style=\"width:100%; height:auto; border-radius: 8px; margin-bottom: 24px;\">`;\n}\n\n// 5. Fix \"No Links Found\" Error 🔗\n// If the content doesn't have a link, we append a high-quality reference.\nlet contentBody = aiData.content || \"\";\nif (!contentBody.includes(\"<a href\")) {\n    contentBody += `<br><p><em>Reference: <a href=\"https://www.akc.org\" target=\"_blank\" rel=\"noopener\">American Kennel Club</a></em></p>`;\n}\n\n// 6. Final HTML Assembly\nconst tagsHtml = Array.isArray(keywords) ? keywords.map(k => '#' + k.replace(/ /g, '')).join(' ') : \"\";\nconst finalHtml = `\n${heroImage}\n<br><br>\n${contentBody}\n<br><hr>\n<p><strong>Tags:</strong> ${tagsHtml}</p>\n`;\n\n// 7. Get Category ID\nlet catId = 1;\nif (catItem && catItem.json) {\n    if (Array.isArray(catItem.json) && catItem.json.length > 0) catId = catItem.json[0].id;\n    else if (catItem.json.id) catId = catItem.json.id;\n}\n\n// 8. OUTPUT 🚀\nreturn {\n  json: {\n    title: title,\n    slug: slug,\n    excerpt: excerpt,\n    content: finalHtml,\n    status: 'publish',\n    categories: [ catId ],\n    // Attempt to inject the Focus Keyword into RankMath/Yoast fields\n    meta: {\n        rank_math_focus_keyword: focusKeyword, \n        _yoast_wpseo_focuskw: focusKeyword\n    }\n  }\n};"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1072,
+          -464
+        ],
+        "id": "6e97b6d4-82df-4dae-a8e6-09f742e680d1",
+        "name": "Prepare Payload"
+      }
+    ],
+    "connections": {
+      "Generate AI Content": {
+        "main": [
+          [
+            {
+              "node": "Automated Image Retrieval from Pexels",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "3. Schedule Your Posts": {
+        "main": [
+          [
+            {
+              "node": "Read Input Sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Automated Image Retrieval from Pexels": {
+        "main": [
+          [
+            {
+              "node": "Find Category ID",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "2. When clicking ‘Test workflow’": {
+        "main": [
+          [
+            {
+              "node": "Read Input Sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Create posts on Wordpress": {
+        "main": [
+          []
+        ]
+      },
+      "Append row in sheet": {
+        "main": [
+          [
+            {
+              "node": "Mark as Processed (input = 1)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Read Input Sheet": {
+        "main": [
+          [
+            {
+              "node": "Select First Unprocessed Row",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Select First Unprocessed Row": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "Read Input Sheet1",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Generate AI Content",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Read Input Sheet1": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Loop Over Items": {
+        "main": [
+          [
+            {
+              "node": "Read Input Sheet",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Update row in sheet1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Update row in sheet1": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Define Categories": {
+        "main": [
+          [
+            {
+              "node": "Create Categories HTTP",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Find Category ID": {
+        "main": [
+          [
+            {
+              "node": "Prepare Payload",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Prepare Payload": {
+        "main": [
+          [
+            {
+              "node": "Find Category ID1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Find Category ID1": {
+        "main": [
+          [
+            {
+              "node": "Append row in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "cohen rayn",
+    "name": "Version 83215e5b",
+    "description": ""
+  },
+  "activeVersionId": "83215e5b-de91-40d3-b32b-484bbb5f7047",
+  "connections": {
+    "Generate AI Content": {
+      "main": [
+        [
+          {
+            "node": "Automated Image Retrieval from Pexels",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3. Schedule Your Posts": {
+      "main": [
+        [
+          {
+            "node": "Read Input Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Automated Image Retrieval from Pexels": {
+      "main": [
+        [
+          {
+            "node": "Find Category ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2. When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Read Input Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create posts on Wordpress": {
+      "main": [
+        []
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Mark as Processed (input = 1)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Input Sheet": {
+      "main": [
+        [
+          {
+            "node": "Select First Unprocessed Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select First Unprocessed Row": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Read Input Sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate AI Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Input Sheet1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Read Input Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Define Categories": {
+      "main": [
+        [
+          {
+            "node": "Create Categories HTTP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Category ID": {
+      "main": [
+        [
+          {
+            "node": "Prepare Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Payload": {
+      "main": [
+        [
+          {
+            "node": "Find Category ID1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Category ID1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-11-13T17:11:55.187Z",
+  "id": "p6NJiF1UVgIAkYjb",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Automated Content Generation & Publishing - Wordpress",
+  "nodes": [
+    {
+      "parameters": {
+        "title": "={{ $('Generate AI Content').item.json.message.content.title }}",
+        "additionalFields": {
+          "content": "={{ \n/* 1. HERO IMAGE (With Safety Check) */\n$('Automated Image Retrieval from Pexels').item.json.photos && $('Automated Image Retrieval from Pexels').item.json.photos.length > 0 \n? \n'<img src=\"' + $('Automated Image Retrieval from Pexels').item.json.photos[0].src.landscape + '\" alt=\"' + ($('Generate AI Content').item.json.keywords ? $('Generate AI Content').item.json.keywords[0] : 'Dog Tip') + '\" style=\"width:100%; height:auto; border-radius: 8px; margin-bottom: 24px;\">' \n: \n'' \n}}\n\n<br><br>\n\n{{ \n/* 2. MAIN ARTICLE CONTENT */\n/* Checks for flat content first, then nested path */\n$('Generate AI Content').item.json.content || $('Generate AI Content').item.json.message.content.content \n}}\n\n<br><hr>\n\n<p><strong>Tags:</strong> \n{{ \n/* 3. HASHTAGS */\n/* Checks for flat keywords first, then nested path, then handles the map */\n(\n  $('Generate AI Content').item.json.keywords || \n  $('Generate AI Content').item.json.message.content.keywords || \n  []\n).map(k => '#' + k.replace(/ /g, '')).join(' ') \n}}\n</p>",
+          "slug": "={{ $('Generate AI Content').item.json.message.content.slug }}",
+          "status": "draft",
+          "categories": "={{ $json.id }}",
+          "tags": "="
+        }
+      },
+      "id": "b20f4d6a-37b9-40ed-80de-9c679d44b8cb",
+      "name": "Create posts on Wordpress",
+      "type": "n8n-nodes-base.wordpress",
+      "position": [
+        1440,
+        416
+      ],
+      "typeVersion": 1,
+      "alwaysOutputData": false,
+      "credentials": {
+        "wordpressApi": {
+          "id": "BLvROD2lSVQVPpRK",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "{{ $json.prompt }}",
+        "height": 892.7656453715782,
+        "width": 607.503259452412
+      },
+      "id": "c2e6573b-fb15-419f-b845-ea1b74c82407",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -544,
+        -736
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "ffa9e2c6-64be-49a1-9d34-c58a3a1d9cc8",
+      "name": "1. Auto Start",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        -288,
+        -448
+      ],
+      "typeVersion": 1.2,
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "id": "b7f180c3-2cbb-486c-9ff8-a1996a6378fd",
+      "name": "2. When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -288,
+        -224
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtHour": "={{ 8 }}"
+            }
+          ]
+        }
+      },
+      "id": "400286bd-a8b2-4d00-8104-9562e4f14788",
+      "name": "3. Schedule Your Posts",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        -288,
+        0
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "content": "## AI Content Generating\n\n**Automatic Content & Keyword Generation\n\n- Use your own prompt to start\n- ChatGPT generates full-length articles with structured headings.\n- Extracts relevant image search keywords for visual enhancement.\n- To implement this, add the following prompt (green note) below your workflow:\n",
+        "height": 271.4285686334568,
+        "width": 351.77682676671327
+      },
+      "id": "99c1d7a9-b62b-4e54-a4d3-ab5372585db7",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -48,
+        -16
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "(YOUR PROMPT)\n\n**Image Search Keywords (For Visual Alignment)**\n\n- Automatically generates 3-5 English keywords for image searches based on the article content.\n- Keywords should be specific objects, locations, or atmospheres rather than abstract concepts.\n\n**Article Formatting Requirements**\n\n1️⃣ Title (H1): Ensure unique and trend-driven headlines.\n2️⃣ H2 / H3 Subheadings: Structure content in an SEO-optimized format.\n3️⃣ Article Structure (Enhanced Readability)\n\n** Introduction **\n- Go straight to the point, avoiding excessive background.\n- Use question hooks or market trend data to engage readers.\n\n** Core Content **\n- Include at least three knowledge points to ensure depth.\n- Balance short and long sentences for better flow.\n\n** Conclusion **\n- Avoid generic AI-style summaries; instead, provide insights or actionable takeaways.\n- Optionally include a CTA (Call to Action).\n\n** HTML Formatting **\nEnsure the article is properly structured in HTML format:\n- Headings: Use <h1>, <h2>, <h3> appropriately.\n- Paragraphs: Enclose text within <p>.\n- Emphasized Words: Use <strong> to highlight key terms.\n- Lists: Use <ul> and <li> for bullet points.\n\nEnsure a clean, well-structured output instead of plain text.\n\n### **Final JSON Format\nEnsure the output follows this structure:\n\n{\n  \"title\": \"{Generate an H1 title that aligns with market trends, ensures high click-through rates, and follows keyword strategy}\",\n  \"content\": \"{Generate a complete HTML article including H1, H2, H3 headings, paragraphs, lists, etc.}\",\n  \"keywords\": [\"{Image search keyword 1}\", \"{Image search keyword 2}\", \"{Image search keyword 3}\", \"{Image search keyword 4}\", \"{Image search keyword 5}\"]\n}",
+        "height": 1277.4269457977707,
+        "width": 349.47344203333904,
+        "color": 4
+      },
+      "id": "9ab0b900-a976-48fa-a9a1-4d48e11b2b91",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -48,
+        288
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Google Sheet Setting\n**You need to set up these in your sheet column** \n- title\n- content\n- image search keyword\n\n**Mapping \"Values to Send\"**\n- {{ $json.message.content.title }}\n- {{ $json.message.content.content }}\n- {{ $json.message.content.keywords.join(\"+\") }}",
+        "height": 267.17005729996885,
+        "width": 367.1064142931126
+      },
+      "id": "7eeb978f-9473-4920-9c7b-b23a45e5c60c",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        320,
+        -16
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "=https://api.pexels.com/v1/search?per_page=1&orientation=landscape&query={{ $json.message.content.keywords }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "RYksW3HnHTtFLCbuSxcarG5f7GYSnxel2fRrdU8FewDUiNbcwmXxWbtS"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8006e6d5-80b1-4348-a208-4e00eb660bc5",
+      "name": "Automated Image Retrieval from Pexels",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        512,
+        -224
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "content": "## Introduction: WordPress automatically publishes posts and inserts the first image\n\nIt is **highly recommended to install the Featured Image from URL (FIFU) plugin** and enable:\n\n**Auto > Set Featured Media Automatically from Content.** before you generate contents.",
+        "height": 211.65896369815192,
+        "width": 608.0701163493336,
+        "color": 3
+      },
+      "id": "753b2aa3-2b10-4f13-af62-b2acd00ce92f",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -544,
+        -656
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Add your API credential",
+        "height": 170.00764454070014,
+        "width": 348.08256103956126
+      },
+      "id": "c0332612-dbc2-44f8-b0c8-0d666b8bf7ba",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        112,
+        -240
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Add your API credential",
+        "height": 170.00764454070008,
+        "width": 150
+      },
+      "id": "5ea4ae8c-0516-441a-bff2-3f9d7309a075",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        320,
+        -240
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Add your API credential",
+        "height": 172.00917344884022,
+        "width": 201.97095074533956
+      },
+      "id": "217064b6-55f9-4a16-82f4-0a1e9f4a3903",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        464,
+        -240
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o",
+          "cachedResultName": "GPT-4O"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an expert Pet Nutritionist and SEO Content Strategist.\n\n**INPUT DATA:**\n- **Topic:** {{ $json.Topic }}\n- **Target Keyword:** {{ $json.Target_Keyword }}\n- **Personal Story (Context):** {{ $json.Nalla_Context }}\n- **Post Goal:** {{ $json.Post_Goal }}\n\n# MANDATORY: PRE-COMPUTATION STEPS\n1. **Analyze Unique Angles:** Identify specific breeds or life stages.\n2. **Title Strategy:** Create a catchy title (Max 60 chars) with the Target Keyword. NO \"Ultimate Guide\".\n3. **Visual Strategy:** Create a descriptive search phrase for a stock photo.\n\n# CONTENT REQUIREMENTS\n- **Length:** 1000-1500 words.\n- **Tone:** Authoritative yet conversational.\n- **Personal Touch:** Weave the \"Personal Story (Context)\" into the Introduction.\n- **Real Products (NEW):** When recommending solutions, mention 2-3 REAL, top-rated brand names (e.g., Zymox, Kong, Wellness, Blue Buffalo). Explain WHY they are good. **DO NOT include URLs** (I will add affiliate links manually).\n- **Data:** Use real stats (AKC, FEDIAF).\n- **Format:** HTML only (h2, h3, p, ul, li, table, blockquote).\n\n# ARTICLE STRUCTURE (HTML)\n1. **Introduction:** Hook + Nalla's Story + Article Goal.\n2. **Core Content:** 4-6 sections using <h3>.\n3. **Product Spotlight:** A specific section titled \"Top Rated Products for [Topic]\" listing specific brands/models to try.\n4. **Comparison Table:** A <table> comparing ingredients/features of these product types.\n5. **FAQ Section:** 5-7 Q&A.\n6. **Conclusion:** 3 key takeaways.\n7. **Biblical Wisdom:** Quote Proverbs 12:10 or similar + reflection.\n\n# OUTPUT FORMAT (STRICT JSON)\nYou must output ONLY valid JSON. Do not use markdown code blocks.\n\n{\n  \"title\": \"Your catchy SEO title (Max 60 chars)\",\n  \"slug\": \"your-short-url-slug (max 4 words, lowercase, hyphens only)\",\n  \"excerpt\": \"A compelling meta description (150-160 chars) including the keyword\",\n  \"content\": \"The full HTML article string\",\n  \"image_search\": \"The descriptive sentence for Pexels\",\n  \"keywords\": [\"tag1\", \"tag2\", \"tag3\", \"tag4\", \"tag5\"]\n}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {
+          "temperature": 0.9
+        }
+      },
+      "id": "ad944e4e-a4f1-4f1b-8c93-2a4b5b3efeb8",
+      "name": "Generate AI Content",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        160,
+        -224
+      ],
+      "typeVersion": 1.6,
+      "credentials": {
+        "openAiApi": {
+          "id": "h7udaRt5UtnUXt5R",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "=1_GmIsHDd1y1hNSCx4S97l35UMFUNQX4NZSyTDlUxjsI"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "publish_posts",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "date_gmt",
+              "displayName": "date_gmt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "guid",
+              "displayName": "guid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "modified",
+              "displayName": "modified",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "modified_gmt",
+              "displayName": "modified_gmt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "password",
+              "displayName": "password",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "slug",
+              "displayName": "slug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "excerpt",
+              "displayName": "excerpt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "author",
+              "displayName": "author",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "featured_media",
+              "displayName": "featured_media",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "comment_status",
+              "displayName": "comment_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ping_status",
+              "displayName": "ping_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sticky",
+              "displayName": "sticky",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "template",
+              "displayName": "template",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "format",
+              "displayName": "format",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "meta",
+              "displayName": "meta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "categories",
+              "displayName": "categories",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tags",
+              "displayName": "tags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "permalink_template",
+              "displayName": "permalink_template",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "generated_slug",
+              "displayName": "generated_slug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "class_list",
+              "displayName": "class_list",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "uagb_featured_image_src",
+              "displayName": "uagb_featured_image_src",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "uagb_author_info",
+              "displayName": "uagb_author_info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "uagb_comment_info",
+              "displayName": "uagb_comment_info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "uagb_excerpt",
+              "displayName": "uagb_excerpt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "_links",
+              "displayName": "_links",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1344,
+        -224
+      ],
+      "id": "a533aea6-1061-4780-9c27-b151e66580eb",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lQ7j3YxfduLFXixz",
+          "name": "Cohen"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1_GmIsHDd1y1hNSCx4S97l35UMFUNQX4NZSyTDlUxjsI",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "posts",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "19ff8b33-4a84-44bc-80f4-75f3a5e08a70",
+      "name": "Read Input Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -592,
+        432
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lQ7j3YxfduLFXixz",
+          "name": "Cohen"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $input.all();\n\n// 1. Filter: Get a list of ALL rows that are not yet processed\n// (We look for Input == 0)\nconst candidates = rows.filter(row =>\n  row.json.Input == 0 || row.json.Input === '0'\n);\n\n// 2. Check if we have any candidates left\nif (candidates.length > 0) {\n  \n  // 3. The Magic: Pick a RANDOM number between 0 and the list length\n  const randomIndex = Math.floor(Math.random() * candidates.length);\n\n  // 4. Return the single random row we picked\n  return [candidates[randomIndex]];\n\n} else {\n  \n  // Return indicator only if all are processed\n  return [{\n    json: {\n      all_inputs_are_1: true,\n      message: 'All rows are processed',\n    }\n  }];\n}"
+      },
+      "id": "f95b55f0-ae93-4bdb-a346-8b138d6a83c1",
+      "name": "Select First Unprocessed Row",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -416,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1_GmIsHDd1y1hNSCx4S97l35UMFUNQX4NZSyTDlUxjsI",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "publish_posts",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "date_gmt",
+              "displayName": "date_gmt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "guid",
+              "displayName": "guid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "modified",
+              "displayName": "modified",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "modified_gmt",
+              "displayName": "modified_gmt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "password",
+              "displayName": "password",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "slug",
+              "displayName": "slug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "excerpt",
+              "displayName": "excerpt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "author",
+              "displayName": "author",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "featured_media",
+              "displayName": "featured_media",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "comment_status",
+              "displayName": "comment_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ping_status",
+              "displayName": "ping_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sticky",
+              "displayName": "sticky",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "template",
+              "displayName": "template",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "format",
+              "displayName": "format",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "meta",
+              "displayName": "meta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "categories",
+              "displayName": "categories",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tags",
+              "displayName": "tags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "permalink_template",
+              "displayName": "permalink_template",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "generated_slug",
+              "displayName": "generated_slug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "class_list",
+              "displayName": "class_list",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "uagb_featured_image_src",
+              "displayName": "uagb_featured_image_src",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "uagb_author_info",
+              "displayName": "uagb_author_info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "uagb_comment_info",
+              "displayName": "uagb_comment_info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "uagb_excerpt",
+              "displayName": "uagb_excerpt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "_links",
+              "displayName": "_links",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "ea166925-066c-4762-963d-7b61ea938f24",
+      "name": "Mark as Processed (input = 1)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        1616,
+        -224
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lQ7j3YxfduLFXixz",
+          "name": "Cohen"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8266da8f-3169-4350-be89-b0d7f0b17093",
+              "leftValue": "={{ $json.all_inputs_are_1 }}",
+              "rightValue": "=1",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -256,
+        432
+      ],
+      "id": "d35359df-534b-4355-adeb-9ff597a6e90e",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1_GmIsHDd1y1hNSCx4S97l35UMFUNQX4NZSyTDlUxjsI",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "posts",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "0119c73d-2a24-49f5-b11f-ed1bffeadfd1",
+      "name": "Read Input Sheet1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -576,
+        640
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lQ7j3YxfduLFXixz",
+          "name": "Cohen"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -800,
+        448
+      ],
+      "id": "4fe2d239-ae94-4219-963f-90ba082885b1",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1_GmIsHDd1y1hNSCx4S97l35UMFUNQX4NZSyTDlUxjsI",
+          "mode": "list",
+          "cachedResultName": "n8n_fun_dog_content",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GmIsHDd1y1hNSCx4S97l35UMFUNQX4NZSyTDlUxjsI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 799238859,
+          "mode": "list",
+          "cachedResultName": "posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GmIsHDd1y1hNSCx4S97l35UMFUNQX4NZSyTDlUxjsI/edit#gid=799238859"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "publish",
+            "Input": "=1",
+            "row_number": "={{ $json.row_number }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Target_Keyword",
+              "displayName": "Target_Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nalla_Context",
+              "displayName": "Nalla_Context",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Post_Goal",
+              "displayName": "Post_Goal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Input",
+              "displayName": "Input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -976,
+        448
+      ],
+      "id": "cfc54916-a020-4c29-86ea-0a70e384a29c",
+      "name": "Update row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lQ7j3YxfduLFXixz",
+          "name": "Cohen"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      name: \"Grooming\",\n      slug: \"grooming\",\n      description: \"Essential tips and guides for brushing, bathing, nail trimming, and keeping your dog's coat healthy and clean.\"\n    }\n  },\n  {\n    json: {\n      name: \"Food & Diet\",\n      slug: \"food-and-diet\",\n      description: \"Expert nutrition advice, dog food reviews, and dietary plans to ensure your pet stays healthy at every life stage.\"\n    }\n  },\n  {\n    json: {\n      name: \"Training\",\n      slug: \"training\",\n      description: \"Practical behavior guides, obedience techniques, and training hacks to help you raise a well-mannered and happy dog.\"\n    }\n  },\n  {\n    json: {\n      name: \"Lifestyle & Gear\",\n      slug: \"lifestyle-and-gear\",\n      description: \"Reviews of the best dog toys, beds, and accessories, plus advice on traveling and living an active life with your pet.\"\n    }\n  }\n];"
+      },
+      "id": "039f8018-0aac-466f-8843-ef065729ea0e",
+      "name": "Define Categories",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        -880
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://dogfoodandfun.padushka.com/wp-json/wp/v2/categories",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ $json.name }}"
+            },
+            {
+              "name": "slug",
+              "value": "={{ $json.slug }}"
+            },
+            {
+              "name": "description",
+              "value": "={{ $json.description }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "623dcf40-656b-4638-b70d-982ca7ea3751",
+      "name": "Create Categories HTTP",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        688,
+        -880
+      ],
+      "credentials": {
+        "wordpressApi": {
+          "id": "BLvROD2lSVQVPpRK",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Create categories in wordpress \n",
+        "height": 368,
+        "width": 656
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        368,
+        -976
+      ],
+      "typeVersion": 1,
+      "id": "70dde5e9-b16b-4e12-bd5b-093b3a2677bd",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "url": "https://dogfoodandfun.padushka.com/wp-json/wp/v2/categories",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "slug",
+              "value": "={{ $('Select First Unprocessed Row').item.json.Category.toLowerCase().replace(' & ', '-and-').replace(/ /g, '-') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        880,
+        -224
+      ],
+      "id": "716fe9ad-1804-400e-b6dd-2f9e0f65a000",
+      "name": "Find Category ID",
+      "credentials": {
+        "wordpressApi": {
+          "id": "BLvROD2lSVQVPpRK",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://dogfoodandfun.padushka.com/wp-json/wp/v2/posts",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1328,
+        -480
+      ],
+      "id": "e553db25-1fd1-46fd-bc80-3d53db56c3c1",
+      "name": "Find Category ID1",
+      "credentials": {
+        "wordpressApi": {
+          "id": "BLvROD2lSVQVPpRK",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Grab Data Safely\nconst aiItem = $('Generate AI Content').first();\nconst pexelsItem = $('Automated Image Retrieval from Pexels').first();\nconst catItem = $('Find Category ID').first();\nconst rawAi = aiItem ? aiItem.json : {};\n\n// 2. DETECTIVE WORK: Find the AI Content 🕵️‍♂️\nlet aiData = {};\nif (rawAi.title) {\n    aiData = rawAi;\n} else if (rawAi.message && rawAi.message.content) {\n    const content = rawAi.message.content;\n    if (typeof content === 'string' && content.trim().startsWith('{')) {\n        try {\n            const cleanJson = content.replace(/```json/g, '').replace(/```/g, '');\n            aiData = JSON.parse(cleanJson);\n        } catch (e) { aiData = { content: content }; }\n    } else if (typeof content === 'object') {\n        aiData = content;\n    }\n}\n\n// 3. Setup Defaults\nconst title = aiData.title || rawAi.Topic || \"Dog Tips\";\n// Use the original Target Keyword from the start of the flow if available\nconst focusKeyword = rawAi.Target_Keyword || (aiData.keywords ? aiData.keywords[0] : \"Dogs\");\nconst slug = aiData.slug || \"dog-post-\" + Math.floor(Math.random() * 1000);\nconst excerpt = aiData.excerpt || \"Learn more about \" + focusKeyword;\nconst keywords = aiData.keywords || [\"Dogs\"];\n\n// 4. Build Hero Image\nlet heroImage = \"\";\nconst pexelsData = pexelsItem ? pexelsItem.json : {};\nif (pexelsData.photos && pexelsData.photos.length > 0) {\n   const imageUrl = pexelsData.photos[0].src.landscape;\n   heroImage = `<img src=\"${imageUrl}\" alt=\"${focusKeyword}\" style=\"width:100%; height:auto; border-radius: 8px; margin-bottom: 24px;\">`;\n}\n\n// 5. Fix \"No Links Found\" Error 🔗\n// If the content doesn't have a link, we append a high-quality reference.\nlet contentBody = aiData.content || \"\";\nif (!contentBody.includes(\"<a href\")) {\n    contentBody += `<br><p><em>Reference: <a href=\"https://www.akc.org\" target=\"_blank\" rel=\"noopener\">American Kennel Club</a></em></p>`;\n}\n\n// 6. Final HTML Assembly\nconst tagsHtml = Array.isArray(keywords) ? keywords.map(k => '#' + k.replace(/ /g, '')).join(' ') : \"\";\nconst finalHtml = `\n${heroImage}\n<br><br>\n${contentBody}\n<br><hr>\n<p><strong>Tags:</strong> ${tagsHtml}</p>\n`;\n\n// 7. Get Category ID\nlet catId = 1;\nif (catItem && catItem.json) {\n    if (Array.isArray(catItem.json) && catItem.json.length > 0) catId = catItem.json[0].id;\n    else if (catItem.json.id) catId = catItem.json.id;\n}\n\n// 8. OUTPUT 🚀\nreturn {\n  json: {\n    title: title,\n    slug: slug,\n    excerpt: excerpt,\n    content: finalHtml,\n    status: 'publish',\n    categories: [ catId ],\n    // Attempt to inject the Focus Keyword into RankMath/Yoast fields\n    meta: {\n        rank_math_focus_keyword: focusKeyword, \n        _yoast_wpseo_focuskw: focusKeyword\n    }\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        -464
+      ],
+      "id": "6e97b6d4-82df-4dae-a8e6-09f742e680d1",
+      "name": "Prepare Payload"
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n_flows",
+  "repo_owner": "galak06",
+  "repo_path": "workflows",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-11-13T17:11:55.194Z",
+      "createdAt": "2025-11-13T17:11:55.194Z",
+      "role": "workflow:owner",
+      "workflowId": "p6NJiF1UVgIAkYjb",
+      "projectId": "YaGVPyA24kD9PXTE"
+    }
+  ],
+  "staticData": {
+    "node:3. Schedule Your Posts": {
+      "recurrenceRules": []
+    }
+  },
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-17T16:47:19.067Z",
+  "versionId": "83215e5b-de91-40d3-b32b-484bbb5f7047"
+}
