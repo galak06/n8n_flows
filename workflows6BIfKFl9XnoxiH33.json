@@ -1,0 +1,570 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2026-01-31T18:58:17.000Z",
+    "createdAt": "2026-01-31T18:56:35.811Z",
+    "versionId": "48ab3b90-dc54-4e71-b321-2bd7fe7ce530",
+    "workflowId": "6BIfKFl9XnoxiH33",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "53622231-dc7d-4948-8046-bdbe3f469087",
+          "authentication": "headerAuth",
+          "responseMode": "lastNode",
+          "responseData": "allEntries",
+          "options": {}
+        },
+        "id": "676f9f4c-4316-4941-9e94-21c19c730ef8",
+        "name": "Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1,
+        "position": [
+          -1616,
+          -96
+        ],
+        "webhookId": "53622231-dc7d-4948-8046-bdbe3f469087",
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "MTg6dVk8O01xYOfI",
+            "name": "Header Auth account 2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1P6VPe5-HfAjqL3zalhXft5JKjsenLTB3EL6F5VHZVWw",
+            "mode": "list",
+            "cachedResultName": "subscriber_mails ",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1P6VPe5-HfAjqL3zalhXft5JKjsenLTB3EL6F5VHZVWw/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 2098414702,
+            "mode": "list",
+            "cachedResultName": "Contact",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1P6VPe5-HfAjqL3zalhXft5JKjsenLTB3EL6F5VHZVWw/edit#gid=2098414702"
+          },
+          "filtersUI": {
+            "values": [
+              {
+                "lookupColumn": "=email",
+                "lookupValue": "={{ $json.body.email }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "c555f856-0cd4-4b6b-9a14-989d4d164bbd",
+        "name": "Check if Exists",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -1392,
+          -96
+        ],
+        "alwaysOutputData": true,
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "lQ7j3YxfduLFXixz",
+            "name": "Cohen"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "1P6VPe5-HfAjqL3zalhXft5JKjsenLTB3EL6F5VHZVWw",
+            "mode": "list",
+            "cachedResultName": "subscriber_mails ",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1P6VPe5-HfAjqL3zalhXft5JKjsenLTB3EL6F5VHZVWw/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 2098414702,
+            "mode": "list",
+            "cachedResultName": "Contact",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1P6VPe5-HfAjqL3zalhXft5JKjsenLTB3EL6F5VHZVWw/edit#gid=2098414702"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "headers": "={{ $('Webhook').item.json.headers }}",
+              "params": "={{ $('Webhook').item.json.params }}",
+              "query": "={{ $('Webhook').item.json.query }}",
+              "body": "={{ $('Webhook').item.json.body }}",
+              "email": "={{ $('Webhook').item.json.body.email }}",
+              "executionMode": "={{ $('Webhook').item.json.executionMode }}",
+              "webhookUrl": "={{ $('Webhook').item.json.webhookUrl }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "headers",
+                "displayName": "headers",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "params",
+                "displayName": "params",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "query",
+                "displayName": "query",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "email",
+                "displayName": "email",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "body",
+                "displayName": "body",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "webhookUrl",
+                "displayName": "webhookUrl",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "executionMode",
+                "displayName": "executionMode",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "id": "1fcf6f23-0f35-4318-b1e6-495fa3fcf533",
+        "name": "Append to Sheet",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -960,
+          -128
+        ],
+        "alwaysOutputData": false,
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "lQ7j3YxfduLFXixz",
+            "name": "Cohen"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "loose",
+              "version": 3
+            },
+            "conditions": [
+              {
+                "id": "ac233f21-c053-4995-9f73-047f4115caa4",
+                "leftValue": "={{ !!$('Check if Exists').item.json.email }}",
+                "rightValue": "No fields - item(s) exist, but they're empty",
+                "operator": {
+                  "type": "boolean",
+                  "operation": "false",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "looseTypeValidation": true,
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          -1168,
+          -96
+        ],
+        "id": "407d52cb-8972-4d64-bd27-9a9b2199975d",
+        "name": "If",
+        "executeOnce": false
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Check if Exists",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Check if Exists": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "Append to Sheet",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          []
+        ]
+      }
+    },
+    "authors": "cohen rayn",
+    "name": "Version 48ab3b90",
+    "description": ""
+  },
+  "activeVersionId": "48ab3b90-dc54-4e71-b321-2bd7fe7ce530",
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Check if Exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if Exists": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Append to Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    }
+  },
+  "createdAt": "2026-01-31T08:40:52.703Z",
+  "id": "6BIfKFl9XnoxiH33",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "contact_hook_fun",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "53622231-dc7d-4948-8046-bdbe3f469087",
+        "authentication": "headerAuth",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "id": "676f9f4c-4316-4941-9e94-21c19c730ef8",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -1616,
+        -96
+      ],
+      "webhookId": "53622231-dc7d-4948-8046-bdbe3f469087",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "MTg6dVk8O01xYOfI",
+          "name": "Header Auth account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1P6VPe5-HfAjqL3zalhXft5JKjsenLTB3EL6F5VHZVWw",
+          "mode": "list",
+          "cachedResultName": "subscriber_mails ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1P6VPe5-HfAjqL3zalhXft5JKjsenLTB3EL6F5VHZVWw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2098414702,
+          "mode": "list",
+          "cachedResultName": "Contact",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1P6VPe5-HfAjqL3zalhXft5JKjsenLTB3EL6F5VHZVWw/edit#gid=2098414702"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "=email",
+              "lookupValue": "={{ $json.body.email }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c555f856-0cd4-4b6b-9a14-989d4d164bbd",
+      "name": "Check if Exists",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1392,
+        -96
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lQ7j3YxfduLFXixz",
+          "name": "Cohen"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1P6VPe5-HfAjqL3zalhXft5JKjsenLTB3EL6F5VHZVWw",
+          "mode": "list",
+          "cachedResultName": "subscriber_mails ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1P6VPe5-HfAjqL3zalhXft5JKjsenLTB3EL6F5VHZVWw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2098414702,
+          "mode": "list",
+          "cachedResultName": "Contact",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1P6VPe5-HfAjqL3zalhXft5JKjsenLTB3EL6F5VHZVWw/edit#gid=2098414702"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "headers": "={{ $('Webhook').item.json.headers }}",
+            "params": "={{ $('Webhook').item.json.params }}",
+            "query": "={{ $('Webhook').item.json.query }}",
+            "body": "={{ $('Webhook').item.json.body }}",
+            "email": "={{ $('Webhook').item.json.body.email }}",
+            "executionMode": "={{ $('Webhook').item.json.executionMode }}",
+            "webhookUrl": "={{ $('Webhook').item.json.webhookUrl }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "headers",
+              "displayName": "headers",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "params",
+              "displayName": "params",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "body",
+              "displayName": "body",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "webhookUrl",
+              "displayName": "webhookUrl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "executionMode",
+              "displayName": "executionMode",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "1fcf6f23-0f35-4318-b1e6-495fa3fcf533",
+      "name": "Append to Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -960,
+        -128
+      ],
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lQ7j3YxfduLFXixz",
+          "name": "Cohen"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ac233f21-c053-4995-9f73-047f4115caa4",
+              "leftValue": "={{ !!$('Check if Exists').item.json.email }}",
+              "rightValue": "No fields - item(s) exist, but they're empty",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1168,
+        -96
+      ],
+      "id": "407d52cb-8972-4d64-bd27-9a9b2199975d",
+      "name": "If",
+      "executeOnce": false
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n_flows",
+  "repo_owner": "galak06",
+  "repo_path": "workflows",
+  "settings": {
+    "executionOrder": "v1",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-01-31T08:40:52.707Z",
+      "createdAt": "2026-01-31T08:40:52.707Z",
+      "role": "workflow:owner",
+      "workflowId": "6BIfKFl9XnoxiH33",
+      "projectId": "YaGVPyA24kD9PXTE"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-31T18:56:35.809Z",
+  "versionId": "48ab3b90-dc54-4e71-b321-2bd7fe7ce530"
+}
