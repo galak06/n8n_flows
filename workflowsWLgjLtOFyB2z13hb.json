@@ -1,0 +1,80 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get many pages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-02-19T19:02:35.837Z",
+  "id": "WLgjLtOFyB2z13hb",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "WP Audit to Google Sheets",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8e5ac59f-0766-4e8a-a73c-e2d09363eb98",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "page",
+        "operation": "getAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "0766eb56-7d6f-47bb-a540-0719fea5d178",
+      "name": "Get many pages",
+      "credentials": {
+        "wordpressApi": {
+          "id": "BLvROD2lSVQVPpRK",
+          "name": "Wordpress account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n_flows",
+  "repo_owner": "galak06",
+  "repo_path": "workflows",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-02-19T19:02:35.843Z",
+      "createdAt": "2026-02-19T19:02:35.843Z",
+      "role": "workflow:owner",
+      "workflowId": "WLgjLtOFyB2z13hb",
+      "projectId": "YaGVPyA24kD9PXTE"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-02-19T19:02:35.837Z",
+  "versionId": "936607d7-d776-4688-b6d0-d2cbe6efd687"
+}
