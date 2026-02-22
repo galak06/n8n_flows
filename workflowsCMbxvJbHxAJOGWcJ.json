@@ -1,0 +1,245 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2026-02-21T17:14:53.637Z",
+    "createdAt": "2026-02-21T17:14:53.637Z",
+    "versionId": "f4ceb978-bbd5-42b6-a894-c485ea88d554",
+    "workflowId": "CMbxvJbHxAJOGWcJ",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "dcp-quote",
+          "responseMode": "lastNode",
+          "options": {}
+        },
+        "id": "webhook",
+        "name": "Webhook Quote",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          200,
+          200
+        ],
+        "webhookId": "dcp-quote"
+      },
+      {
+        "parameters": {},
+        "id": "trigger",
+        "name": "Manual Trigger",
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          200,
+          400
+        ]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "http://dcp-api:5050/quote",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify($json.body || {}) }}",
+          "options": {
+            "timeout": 600000
+          }
+        },
+        "id": "dcp_quote",
+        "name": "DCP Get Quote",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          450,
+          300
+        ]
+      },
+      {
+        "parameters": {
+          "mode": "runOnceForAllItems",
+          "jsCode": "const html = $input.first().json.html || '';\nconst params = $input.first().json.params || {};\n\n// Extract prices from summary section\nconst itemPriceMatch = html.match(/סך מחיר הפריטים[\\s\\S]*?>(\\d+)[\\s\\n]*₪/i);\nconst discountMatch = html.match(/הנחה[\\s\\S]*?>(\\d+)[\\s\\n]*₪\\s*-/i);\nconst totalBeforeVatMatch = html.match(/סה\"כ לא כולל מע\"מ[\\s\\S]*?class=\"SumText\">(\\d+)/i);\nconst totalWithVatMatch = html.match(/סה\"כ כולל מע\"מ[\\s\\S]*?class=\"SumText\">(\\d+)/i);\nconst discountPctMatch = html.match(/הנחת \\u05dcקוח[^%]*(\\d+)%/i);\n\n// Extract description\nconst descMatch = html.match(/<tr[^>]*bgcolor=\"#f1f1f1\"[^>]*>[\\s\\S]*?<td>\\d+<\\/td><td>([\\s\\S]*?)<\\/td>/i);\nlet description = descMatch ? descMatch[1].replace(/<[^>]+>/g, ' ').replace(/\\s+/g, ' ').trim() : null;\n\n// Parse specs\nconst qtyMatch = description?.match(/(\\d+)\\s*חוברות/);\nconst sizeMatch = description?.match(/בגודל\\s*([\\d.x]+)/);\nconst pagesMatch = description?.match(/(\\d+)\\s*עמ/);\nconst thicknessMatch = description?.match(/עובי[^:]*:\\s*([\\d.]+)/);\n\nreturn [{\n  json: {\n    status: 'success',\n    pricing: {\n      item_price: itemPriceMatch ? parseInt(itemPriceMatch[1]) : null,\n      discount: discountMatch ? parseInt(discountMatch[1]) : 0,\n      discount_pct: discountPctMatch ? discountPctMatch[1] + '%' : '5%',\n      total_before_vat: totalBeforeVatMatch ? parseInt(totalBeforeVatMatch[1]) : null,\n      total_with_vat: totalWithVatMatch ? parseInt(totalWithVatMatch[1]) : null\n    },\n    product: {\n      quantity: qtyMatch ? qtyMatch[1] : params.quantity || 100,\n      size_cm: sizeMatch ? sizeMatch[1] : null,\n      bw_pages: params.BwNum || 16,\n      color_pages: params.ColorNum || 0,\n      thickness_mm: thicknessMatch ? thicknessMatch[1] : null\n    },\n    submitted: params,\n    description: description?.substring(0, 300)\n  }\n}];"
+        },
+        "id": "parse_price",
+        "name": "Parse Price",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          700,
+          300
+        ]
+      }
+    ],
+    "connections": {
+      "Manual Trigger": {
+        "main": [
+          [
+            {
+              "node": "DCP Get Quote",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Webhook Quote": {
+        "main": [
+          [
+            {
+              "node": "DCP Get Quote",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "DCP Get Quote": {
+        "main": [
+          [
+            {
+              "node": "Parse Price",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "cohen rayn",
+    "name": null,
+    "description": null,
+    "autosaved": false
+  },
+  "activeVersionId": "f4ceb978-bbd5-42b6-a894-c485ea88d554",
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "DCP Get Quote",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Quote": {
+      "main": [
+        [
+          {
+            "node": "DCP Get Quote",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DCP Get Quote": {
+      "main": [
+        [
+          {
+            "node": "Parse Price",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-02-21T08:17:00.477Z",
+  "id": "CMbxvJbHxAJOGWcJ",
+  "isArchived": false,
+  "meta": null,
+  "name": "Glilit Price Offering - Web Suppliers",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "dcp-quote",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook",
+      "name": "Webhook Quote",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        200,
+        200
+      ],
+      "webhookId": "dcp-quote"
+    },
+    {
+      "parameters": {},
+      "id": "trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        200,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://dcp-api:5050/quote",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body || {}) }}",
+        "options": {
+          "timeout": 600000
+        }
+      },
+      "id": "dcp_quote",
+      "name": "DCP Get Quote",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const html = $input.first().json.html || '';\nconst params = $input.first().json.params || {};\n\n// Extract prices from summary section\nconst itemPriceMatch = html.match(/סך מחיר הפריטים[\\s\\S]*?>(\\d+)[\\s\\n]*₪/i);\nconst discountMatch = html.match(/הנחה[\\s\\S]*?>(\\d+)[\\s\\n]*₪\\s*-/i);\nconst totalBeforeVatMatch = html.match(/סה\"כ לא כולל מע\"מ[\\s\\S]*?class=\"SumText\">(\\d+)/i);\nconst totalWithVatMatch = html.match(/סה\"כ כולל מע\"מ[\\s\\S]*?class=\"SumText\">(\\d+)/i);\nconst discountPctMatch = html.match(/הנחת \\u05dcקוח[^%]*(\\d+)%/i);\n\n// Extract description\nconst descMatch = html.match(/<tr[^>]*bgcolor=\"#f1f1f1\"[^>]*>[\\s\\S]*?<td>\\d+<\\/td><td>([\\s\\S]*?)<\\/td>/i);\nlet description = descMatch ? descMatch[1].replace(/<[^>]+>/g, ' ').replace(/\\s+/g, ' ').trim() : null;\n\n// Parse specs\nconst qtyMatch = description?.match(/(\\d+)\\s*חוברות/);\nconst sizeMatch = description?.match(/בגודל\\s*([\\d.x]+)/);\nconst pagesMatch = description?.match(/(\\d+)\\s*עמ/);\nconst thicknessMatch = description?.match(/עובי[^:]*:\\s*([\\d.]+)/);\n\nreturn [{\n  json: {\n    status: 'success',\n    pricing: {\n      item_price: itemPriceMatch ? parseInt(itemPriceMatch[1]) : null,\n      discount: discountMatch ? parseInt(discountMatch[1]) : 0,\n      discount_pct: discountPctMatch ? discountPctMatch[1] + '%' : '5%',\n      total_before_vat: totalBeforeVatMatch ? parseInt(totalBeforeVatMatch[1]) : null,\n      total_with_vat: totalWithVatMatch ? parseInt(totalWithVatMatch[1]) : null\n    },\n    product: {\n      quantity: qtyMatch ? qtyMatch[1] : params.quantity || 100,\n      size_cm: sizeMatch ? sizeMatch[1] : null,\n      bw_pages: params.BwNum || 16,\n      color_pages: params.ColorNum || 0,\n      thickness_mm: thicknessMatch ? thicknessMatch[1] : null\n    },\n    submitted: params,\n    description: description?.substring(0, 300)\n  }\n}];"
+      },
+      "id": "parse_price",
+      "name": "Parse Price",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        300
+      ]
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n_flows",
+  "repo_owner": "galak06",
+  "repo_path": "workflows",
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionTimeout": 3600,
+    "timezone": "UTC",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-02-21T08:17:00.482Z",
+      "createdAt": "2026-02-21T08:17:00.482Z",
+      "role": "workflow:owner",
+      "workflowId": "CMbxvJbHxAJOGWcJ",
+      "projectId": "YaGVPyA24kD9PXTE"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-02-21T17:14:53.635Z",
+  "versionId": "f4ceb978-bbd5-42b6-a894-c485ea88d554"
+}
