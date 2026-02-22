@@ -1,0 +1,598 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Page Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Page Config": {
+      "main": [
+        [
+          {
+            "node": "Get Page with Meta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Page with Meta": {
+      "main": [
+        [
+          {
+            "node": "Extract Elementor Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Elementor Data": {
+      "main": [
+        [
+          {
+            "node": "Step 1: Research",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Pro": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Step 1: Research",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpApi": {
+      "ai_tool": [
+        [
+          {
+            "node": "Step 1: Research",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Step 1: Research",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Step 1: Research": {
+      "main": [
+        [
+          {
+            "node": "Parse Research",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Research": {
+      "main": [
+        [
+          {
+            "node": "Step 2: Analyze",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Step 2: Analyze": {
+      "main": [
+        [
+          {
+            "node": "Parse Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Analysis": {
+      "main": [
+        [
+          {
+            "node": "Step 3: Enhance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Step 3: Enhance": {
+      "main": [
+        [
+          {
+            "node": "Parse & Validate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse & Validate": {
+      "main": [
+        [
+          {
+            "node": "Route Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Result": {
+      "main": [
+        [
+          {
+            "node": "Update Elementor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Elementor": {
+      "main": [
+        [
+          {
+            "node": "Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-02-21T07:36:10.236Z",
+  "id": "DZxswe84rrLtxMYz",
+  "isArchived": false,
+  "meta": null,
+  "name": "Elementor Content Enhancer",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        304
+      ],
+      "id": "manual-trigger",
+      "name": "Manual Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "pageId",
+              "name": "pageId",
+              "value": "2473",
+              "type": "string"
+            },
+            {
+              "id": "siteUrl",
+              "name": "siteUrl",
+              "value": "https://dogfoodandfun.padushka.com",
+              "type": "string"
+            },
+            {
+              "id": "topic",
+              "name": "researchTopic",
+              "value": "dog nutrition contact page best practices FAQ",
+              "type": "string"
+            },
+            {
+              "id": "websiteUrl",
+              "name": "websiteUrl",
+              "value": "https://dogfoodandfun.padushka.com/",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        304
+      ],
+      "id": "set-config",
+      "name": "Set Page Config"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.siteUrl }}/wp-json/wp/v2/pages/{{ $json.pageId }}?context=edit",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        448,
+        304
+      ],
+      "id": "get-page-meta",
+      "name": "Get Page with Meta",
+      "credentials": {
+        "wordpressApi": {
+          "id": "BLvROD2lSVQVPpRK",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const page = $('Get Page with Meta').item.json;\nconst config = $('Set Page Config').item.json;\n\nlet elementorData = null;\nif (page.meta && page.meta._elementor_data) {\n  try {\n    elementorData = typeof page.meta._elementor_data === 'string' \n      ? JSON.parse(page.meta._elementor_data) \n      : page.meta._elementor_data;\n  } catch (e) {\n    elementorData = null;\n  }\n}\n\nconst title = page.title?.rendered || page.title?.raw || '';\n\nreturn [{\n  json: {\n    pageId: config.pageId,\n    siteUrl: config.siteUrl,\n    websiteUrl: config.websiteUrl,\n    researchTopic: config.researchTopic,\n    title,\n    hasElementorData: !!elementorData,\n    elementorData: elementorData,\n    elementorDataString: elementorData ? JSON.stringify(elementorData, null, 2) : null\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        304
+      ],
+      "id": "extract-elementor",
+      "name": "Extract Elementor Data"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Research best practices for pet nutrition contact pages. Output ONLY JSON, no markdown.\n\nTopic: {{ $json.researchTopic }}\nWebsite: {{ $json.websiteUrl }}\n\nOutput format:\n{\"faqs\": [{\"question\": \"Q?\", \"answer\": \"A.\"}], \"trustElements\": [], \"introSuggestion\": \"\", \"responseTimeInfo\": \"\", \"ctaRecommendations\": []}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        912,
+        304
+      ],
+      "id": "researcher-agent",
+      "name": "Step 1: Research"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-pro",
+        "options": {
+          "temperature": 0.5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        768,
+        544
+      ],
+      "id": "gemini-researcher",
+      "name": "Gemini Pro",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "XQdbTwWIGx543tas",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        928,
+        544
+      ],
+      "id": "serp-tool",
+      "name": "SerpApi",
+      "credentials": {
+        "serpApi": {
+          "id": "48Rp3SgkRz9JYB7B",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $execution.id }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1152,
+        576
+      ],
+      "id": "memory-buffer",
+      "name": "Memory"
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = $json.output || '';\nconst pageData = $('Extract Elementor Data').item.json;\n\n// Default research data\nconst defaultResearch = {\n  faqs: [\n    {\"question\": \"What should I feed my dog?\", \"answer\": \"A balanced diet with quality protein, healthy fats, and carbohydrates suited to your dog's age and size.\"},\n    {\"question\": \"How often should I feed my dog?\", \"answer\": \"Adult dogs typically need 2 meals per day, while puppies may need 3-4 smaller meals.\"},\n    {\"question\": \"Are grain-free diets better?\", \"answer\": \"Not necessarily. Most dogs do well with grains. Consult your vet before major diet changes.\"},\n    {\"question\": \"How do I know if my dog has food allergies?\", \"answer\": \"Common signs include itchy skin, ear infections, and digestive issues.\"},\n    {\"question\": \"Can I give my dog human food?\", \"answer\": \"Some human foods are safe, but many are toxic. Always check before sharing.\"}\n  ],\n  trustElements: [\"Expert nutritionists\", \"Years of experience\", \"Personalized advice\"],\n  introSuggestion: \"Welcome to Dog Food & Fun! Our pet nutrition experts help you make the best dietary choices for your furry friend.\",\n  responseTimeInfo: \"We typically respond within 24 hours.\",\n  ctaRecommendations: [\"Get Expert Advice\", \"Ask Our Nutritionists\"]\n};\n\nlet research = defaultResearch;\ntry {\n  const parsed = JSON.parse(output);\n  if (parsed.faqs) research = parsed;\n} catch (e) {\n  try {\n    const match = output.match(/\\{[\\s\\S]*\\}/);\n    if (match) {\n      const parsed = JSON.parse(match[0]);\n      if (parsed.faqs) research = parsed;\n    }\n  } catch (e2) {}\n}\n\nreturn [{json: {...pageData, research}}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1232,
+        112
+      ],
+      "id": "parse-research",
+      "name": "Parse Research"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-pro",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-pro"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Analyze Elementor structure. Output ONLY JSON.\n\nData: {{ $json.elementorDataString }}\n\nFormat: {\"sections\": [], \"insertPoints\": []}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        1392,
+        304
+      ],
+      "id": "analyze-structure",
+      "name": "Step 2: Analyze",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "XQdbTwWIGx543tas",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawText = $json.content?.parts?.[0]?.text || '';\nconst pageData = $('Parse Research').item.json;\n\nlet analysis = {sections: [], insertPoints: [{location: 'top'}, {location: 'bottom'}]};\ntry {\n  const parsed = JSON.parse(rawText);\n  if (parsed.sections) analysis = parsed;\n} catch (e) {\n  try {\n    const match = rawText.match(/\\{[\\s\\S]*\\}/);\n    if (match) analysis = JSON.parse(match[0]);\n  } catch (e2) {}\n}\n\nreturn [{json: {...pageData, analysis}}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1632,
+        304
+      ],
+      "id": "parse-analysis",
+      "name": "Parse Analysis"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-pro",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-pro"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Enhance this Elementor page. Output ONLY valid JSON.\n\nOriginal: {{ $json.elementorDataString }}\n\nResearch: {{ JSON.stringify($json.research) }}\n\nAdd sections for: intro (use introSuggestion), FAQ (use all faqs), response time (use responseTimeInfo), trust (use trustElements).\n\nWidget format: {\"id\": \"8chars\", \"elType\": \"section\", \"settings\": {}, \"elements\": [{\"id\": \"8chars\", \"elType\": \"column\", \"settings\": {\"_column_size\": 100}, \"elements\": [{\"id\": \"8chars\", \"elType\": \"widget\", \"widgetType\": \"text-editor\", \"settings\": {\"editor\": \"<p>text</p>\"}}]}]}\n\nOutput: {\"enhancedElementorData\": [...], \"changesMade\": [\"change1\"]}"
+            }
+          ]
+        },
+        "options": {
+          "maxOutputTokens": 16000,
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        1792,
+        304
+      ],
+      "id": "enhance-elementor",
+      "name": "Step 3: Enhance",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "XQdbTwWIGx543tas",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawText = $json.content?.parts?.[0]?.text || '';\nconst pageData = $('Parse Analysis').item.json;\n\nlet result = {\n  success: false,\n  pageId: pageData.pageId,\n  siteUrl: pageData.siteUrl,\n  elementorDataString: '',\n  changesMade: [],\n  error: null,\n  research: pageData.research\n};\n\ntry {\n  let enhanced = null;\n  \n  // Try direct parse\n  try {\n    enhanced = JSON.parse(rawText);\n  } catch (e1) {\n    // Try markdown extraction\n    const mdMatch = rawText.match(/```json\\s*([\\s\\S]*?)```/);\n    if (mdMatch) {\n      enhanced = JSON.parse(mdMatch[1]);\n    } else {\n      // Try raw JSON extraction\n      const rawMatch = rawText.match(/\\{[\\s\\S]*\\}/);\n      if (rawMatch) {\n        enhanced = JSON.parse(rawMatch[0]);\n      }\n    }\n  }\n  \n  if (enhanced && enhanced.enhancedElementorData && Array.isArray(enhanced.enhancedElementorData) && enhanced.enhancedElementorData.length > 0) {\n    result.success = true;\n    result.elementorDataString = JSON.stringify(enhanced.enhancedElementorData);\n    result.changesMade = enhanced.changesMade || ['Enhanced page'];\n  } else {\n    result.error = 'No valid enhancedElementorData in response';\n  }\n} catch (e) {\n  result.error = e.message;\n}\n\nreturn [{json: result}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2112,
+        304
+      ],
+      "id": "parse-enhanced",
+      "name": "Parse & Validate"
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch"
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        2320,
+        192
+      ],
+      "id": "route-result",
+      "name": "Route Result"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.siteUrl }}/wp-json/wp/v2/pages/{{ $json.pageId }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"meta\": {\n    \"_elementor_data\": {{ $json.elementorDataString }}\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2576,
+        48
+      ],
+      "id": "update-elementor",
+      "name": "Update Elementor",
+      "credentials": {
+        "wordpressApi": {
+          "id": "BLvROD2lSVQVPpRK",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "status",
+              "name": "status",
+              "value": "success",
+              "type": "string"
+            },
+            {
+              "id": "changes",
+              "name": "changesMade",
+              "value": "={{ $('Parse & Validate').item.json.changesMade }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2768,
+        208
+      ],
+      "id": "success-output",
+      "name": "Success"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "status",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "error",
+              "name": "error",
+              "value": "={{ $('Parse & Validate').item.json.error }}",
+              "type": "string"
+            },
+            {
+              "id": "research",
+              "name": "researchUsed",
+              "value": "={{ $('Parse & Validate').item.json.research }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2544,
+        432
+      ],
+      "id": "error-output",
+      "name": "Error"
+    },
+    {
+      "parameters": {
+        "content": "## Elementor Enhancer\n\n1. Research best practices\n2. Analyze structure\n3. Enhance with AI\n4. Route: success/error\n5. Update WordPress\n\nUses Switch node instead of IF\nto avoid type validation issues",
+        "height": 280,
+        "width": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        192
+      ],
+      "id": "sticky-note",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n_flows",
+  "repo_owner": "galak06",
+  "repo_path": "workflows",
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionTimeout": 3600,
+    "timezone": "UTC",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-02-21T07:36:10.242Z",
+      "createdAt": "2026-02-21T07:36:10.242Z",
+      "role": "workflow:owner",
+      "workflowId": "DZxswe84rrLtxMYz",
+      "projectId": "YaGVPyA24kD9PXTE"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-02-21T09:27:05.414Z",
+  "versionId": "067910bb-47ff-4426-9391-a38f40f16f80"
+}
