@@ -1,0 +1,396 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Page & Recommendations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Page & Recommendations": {
+      "main": [
+        [
+          {
+            "node": "Get WordPress Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get WordPress Page": {
+      "main": [
+        [
+          {
+            "node": "Prepare Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Data": {
+      "main": [
+        [
+          {
+            "node": "Enhance Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enhance Content": {
+      "main": [
+        [
+          {
+            "node": "Parse Enhanced Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Enhanced Content": {
+      "main": [
+        [
+          {
+            "node": "Validate Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Content": {
+      "main": [
+        [
+          {
+            "node": "Update WordPress Page",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update WordPress Page": {
+      "main": [
+        [
+          {
+            "node": "Success Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-02-21T07:33:57.022Z",
+  "id": "vsrX4coeKQOhIjZG",
+  "isArchived": false,
+  "meta": null,
+  "name": "WordPress Content Enhancer",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        300
+      ],
+      "id": "manual-trigger",
+      "name": "Manual Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "pageId",
+              "name": "pageId",
+              "value": "2473",
+              "type": "string"
+            },
+            {
+              "id": "recommendations",
+              "name": "recommendations",
+              "value": "1. Expand main content with a brief introduction about your expertise or what visitors can gain from contacting you.\n2. Remove repetitive 'We'd Love to Hear from You' content to improve readability and avoid keyword stuffing.\n3. Add a small FAQ section on common dog nutrition questions above or below the form.\n4. Add expected response times to manage user expectations.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        300
+      ],
+      "id": "set-config",
+      "name": "Set Page & Recommendations"
+    },
+    {
+      "parameters": {
+        "resource": "page",
+        "operation": "get",
+        "pageId": "={{ $json.pageId }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "id": "get-page",
+      "name": "Get WordPress Page",
+      "credentials": {
+        "wordpressApi": {
+          "id": "BLvROD2lSVQVPpRK",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get data from previous nodes\nconst config = $('Set Page & Recommendations').item.json;\nconst page = $json;\n\n// Extract content\nconst htmlContent = page.content?.rendered || '';\nconst title = page.title?.rendered || '';\n\nreturn [{\n  json: {\n    pageId: config.pageId,\n    recommendations: config.recommendations,\n    currentTitle: title,\n    currentContent: htmlContent,\n    pageUrl: page.link\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ],
+      "id": "prepare-data",
+      "name": "Prepare Data"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-pro",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-pro"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an expert web content writer and UX specialist. Your task is to enhance a WordPress page based on specific SEO recommendations.\n\n## Current Page Content:\n```html\n{{ $json.currentContent }}\n```\n\n## Recommendations to Implement:\n{{ $json.recommendations }}\n\n## Your Task:\nRewrite and enhance the page content implementing ALL the recommendations. Maintain the existing structure but improve it.\n\n## Output Requirements:\nReturn ONLY valid JSON with this structure:\n```json\n{\n  \"enhancedContent\": \"<full HTML content with improvements>\",\n  \"changesSummary\": [\"Change 1 description\", \"Change 2 description\"],\n  \"faqSection\": \"<h2>Frequently Asked Questions</h2><div class='faq'>...</div>\"\n}\n```\n\n## Content Guidelines:\n- Keep the contact form placeholder: <!-- CONTACT FORM -->\n- Use semantic HTML: <section>, <article>, <h2>, <h3>, <p>, <ul>\n- Write in a friendly, professional tone\n- Focus on dog nutrition expertise\n- Add value for visitors\n- Include response time expectations (e.g., 'We typically respond within 24-48 hours')\n- Create 3-4 relevant FAQ items about dog nutrition\n\n## FAQ Topics to Include:\n- General dog nutrition questions\n- How to choose the right dog food\n- Signs of nutritional deficiencies\n- When to consult a vet about diet"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ],
+      "id": "gemini-enhance",
+      "name": "Enhance Content",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "XQdbTwWIGx543tas",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse enhanced content from Gemini\nconst rawText = $json.content?.parts?.[0]?.text || $json.text || '';\nconst pageId = $('Prepare Data').item.json.pageId;\n\nlet enhanced;\ntry {\n  enhanced = JSON.parse(rawText);\n} catch (e) {\n  const jsonMatch = rawText.match(/\\{[\\s\\S]*\\}/);\n  if (jsonMatch) {\n    enhanced = JSON.parse(jsonMatch[0]);\n  } else {\n    throw new Error('Could not parse enhanced content JSON');\n  }\n}\n\nreturn [{\n  json: {\n    pageId,\n    enhancedContent: enhanced.enhancedContent,\n    faqSection: enhanced.faqSection,\n    changesSummary: enhanced.changesSummary\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        300
+      ],
+      "id": "parse-enhanced",
+      "name": "Parse Enhanced Content"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-content",
+              "leftValue": "={{ $json.enhancedContent }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1340,
+        300
+      ],
+      "id": "validate-content",
+      "name": "Validate Content"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://dogfoodandfun.padushka.com/wp-json/wp/v2/pages/{{ $json.pageId }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": {{ JSON.stringify($json.enhancedContent) }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1560,
+        200
+      ],
+      "id": "update-page",
+      "name": "Update WordPress Page",
+      "credentials": {
+        "wordpressApi": {
+          "id": "BLvROD2lSVQVPpRK",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "status",
+              "name": "status",
+              "value": "success",
+              "type": "string"
+            },
+            {
+              "id": "pageId",
+              "name": "pageId",
+              "value": "={{ $('Parse Enhanced Content').item.json.pageId }}",
+              "type": "string"
+            },
+            {
+              "id": "changes",
+              "name": "changesSummary",
+              "value": "={{ $('Parse Enhanced Content').item.json.changesSummary }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1780,
+        200
+      ],
+      "id": "success-output",
+      "name": "Success Output"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "status",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "message",
+              "name": "message",
+              "value": "Failed to generate enhanced content",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1560,
+        400
+      ],
+      "id": "error-output",
+      "name": "Error Output"
+    },
+    {
+      "parameters": {
+        "content": "## WordPress Content Enhancer\n\n### Purpose:\nImplements SEO recommendations by:\n1. Adding expert introduction\n2. Removing duplicate content\n3. Adding FAQ section\n4. Adding response time info\n\n### Flow:\n1. Get current page content\n2. AI rewrites with improvements\n3. Update WordPress page\n\n### Output:\n- Enhanced HTML content\n- FAQ section\n- Summary of changes made",
+        "height": 320,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        180
+      ],
+      "id": "sticky-note",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": null,
+  "repo_name": "n8n_flows",
+  "repo_owner": "galak06",
+  "repo_path": "workflows",
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionTimeout": 3600,
+    "timezone": "UTC",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-02-21T07:33:57.024Z",
+      "createdAt": "2026-02-21T07:33:57.024Z",
+      "role": "workflow:owner",
+      "workflowId": "vsrX4coeKQOhIjZG",
+      "projectId": "YaGVPyA24kD9PXTE"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-02-21T07:33:57.022Z",
+  "versionId": "012da8cb-55be-4a4c-a35c-6db5d27d421b"
+}
