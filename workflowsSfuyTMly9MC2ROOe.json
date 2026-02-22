@@ -1,0 +1,849 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2026-02-21T07:31:51.000Z",
+    "createdAt": "2026-02-21T07:30:09.328Z",
+    "versionId": "29212161-a3b8-455b-a21e-10e62fa67c65",
+    "workflowId": "SfuyTMly9MC2ROOe",
+    "nodes": [
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          0,
+          304
+        ],
+        "id": "manual-trigger",
+        "name": "Manual Trigger"
+      },
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "seo-optimize",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          0,
+          512
+        ],
+        "id": "webhook-trigger",
+        "name": "Webhook Trigger",
+        "webhookId": "641b1040-b001-429d-b61e-4b7cbbafb2d0"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "pageId",
+                "name": "pageId",
+                "value": "={{ $json.body?.pageId || '2473' }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          224,
+          400
+        ],
+        "id": "set-page-id",
+        "name": "Set Page ID"
+      },
+      {
+        "parameters": {
+          "resource": "page",
+          "operation": "get",
+          "pageId": "={{ $json.pageId }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.wordpress",
+        "typeVersion": 1,
+        "position": [
+          448,
+          400
+        ],
+        "id": "get-page",
+        "name": "Get WordPress Page",
+        "credentials": {
+          "wordpressApi": {
+            "id": "BLvROD2lSVQVPpRK",
+            "name": "Wordpress account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Extract clean text from HTML content\nconst content = $json.content?.rendered || '';\nconst title = $json.title?.rendered || '';\nconst excerpt = $json.excerpt?.rendered || '';\nconst slug = $json.slug || '';\n\n// Remove HTML tags\nconst cleanContent = content.replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim();\nconst cleanExcerpt = excerpt.replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim();\n\nreturn [{\n  json: {\n    pageId: $json.id,\n    originalTitle: title,\n    originalSlug: slug,\n    originalExcerpt: cleanExcerpt,\n    contentPreview: cleanContent.substring(0, 2000),\n    contentLength: cleanContent.length,\n    wordCount: cleanContent.split(/\\s+/).length\n  }\n}];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          672,
+          400
+        ],
+        "id": "extract-content",
+        "name": "Extract Content"
+      },
+      {
+        "parameters": {
+          "modelId": {
+            "__rl": true,
+            "value": "models/gemini-2.5-flash",
+            "mode": "list",
+            "cachedResultName": "models/gemini-2.5-flash"
+          },
+          "messages": {
+            "values": [
+              {
+                "content": "=You are an expert SEO specialist. Analyze this WordPress page and provide optimized SEO elements.\n\n## Current Page Data:\n- **Title:** {{ $json.originalTitle }}\n- **Slug:** {{ $json.originalSlug }}\n- **Excerpt:** {{ $json.originalExcerpt }}\n- **Word Count:** {{ $json.wordCount }}\n- **Content Preview:** {{ $json.contentPreview }}\n\n## Your Task:\nGenerate optimized SEO elements. Output ONLY valid JSON, no markdown or explanations.\n\n## Required JSON Output:\n```json\n{\n  \"seoTitle\": \"Optimized page title (50-60 chars, include primary keyword)\",\n  \"metaDescription\": \"Compelling meta description (150-155 chars, include CTA)\",\n  \"focusKeyword\": \"Primary keyword for this page\",\n  \"secondaryKeywords\": [\"keyword1\", \"keyword2\", \"keyword3\"],\n  \"optimizedSlug\": \"seo-friendly-url-slug\",\n  \"seoScore\": 85,\n  \"recommendations\": [\"Suggestion 1\", \"Suggestion 2\"]\n}\n```\n\n## SEO Best Practices:\n- Title: 50-60 characters, keyword near beginning\n- Meta Description: 150-155 characters, compelling CTA\n- Slug: Short, keyword-rich, hyphenated\n- Include action words and benefits"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.googleGemini",
+        "typeVersion": 1,
+        "position": [
+          816,
+          400
+        ],
+        "id": "gemini-seo",
+        "name": "Generate SEO",
+        "credentials": {
+          "googlePalmApi": {
+            "id": "XQdbTwWIGx543tas",
+            "name": "Google Gemini(PaLM) Api account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Parse SEO output from Gemini\nconst rawText = $json.content?.parts?.[0]?.text || $json.text || '';\n\nlet seoData;\ntry {\n  // Try direct parse\n  seoData = JSON.parse(rawText);\n} catch (e) {\n  // Extract JSON from text\n  const jsonMatch = rawText.match(/\\{[\\s\\S]*\\}/);\n  if (jsonMatch) {\n    seoData = JSON.parse(jsonMatch[0]);\n  } else {\n    throw new Error('Could not parse SEO JSON from AI response');\n  }\n}\n\n// Get pageId from previous node\nconst pageId = $('Extract Content').item.json.pageId;\nconst originalTitle = $('Extract Content').item.json.originalTitle;\n\nreturn [{\n  json: {\n    pageId,\n    originalTitle,\n    ...seoData\n  }\n}];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1104,
+          400
+        ],
+        "id": "parse-seo",
+        "name": "Parse SEO Output"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict"
+            },
+            "conditions": [
+              {
+                "id": "has-title",
+                "leftValue": "={{ $json.seoTitle }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          1328,
+          400
+        ],
+        "id": "validate-seo",
+        "name": "Validate SEO"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://dogfoodandfun.padushka.com/wp-json/wp/v2/pages/{{ $json.pageId }}",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "wordpressApi",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"title\": \"{{ $json.seoTitle }}\",\n  \"excerpt\": \"{{ $json.metaDescription }}\",\n  \"slug\": \"{{ $json.optimizedSlug }}\"\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.3,
+        "position": [
+          1552,
+          304
+        ],
+        "id": "update-page",
+        "name": "Update WordPress Page",
+        "credentials": {
+          "wordpressApi": {
+            "id": "BLvROD2lSVQVPpRK",
+            "name": "Wordpress account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "result",
+                "name": "status",
+                "value": "success",
+                "type": "string"
+              },
+              {
+                "id": "result2",
+                "name": "pageId",
+                "value": "={{ $('Parse SEO Output').item.json.pageId }}",
+                "type": "string"
+              },
+              {
+                "id": "result3",
+                "name": "seoTitle",
+                "value": "={{ $('Parse SEO Output').item.json.seoTitle }}",
+                "type": "string"
+              },
+              {
+                "id": "result4",
+                "name": "metaDescription",
+                "value": "={{ $('Parse SEO Output').item.json.metaDescription }}",
+                "type": "string"
+              },
+              {
+                "id": "result5",
+                "name": "focusKeyword",
+                "value": "={{ $('Parse SEO Output').item.json.focusKeyword }}",
+                "type": "string"
+              },
+              {
+                "id": "result6",
+                "name": "seoScore",
+                "value": "={{ $('Parse SEO Output').item.json.seoScore }}",
+                "type": "number"
+              },
+              {
+                "id": "result7",
+                "name": "recommendations",
+                "value": "={{ $('Parse SEO Output').item.json.recommendations }}",
+                "type": "array"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          1760,
+          304
+        ],
+        "id": "success-result",
+        "name": "Success Result"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "error",
+                "name": "status",
+                "value": "error",
+                "type": "string"
+              },
+              {
+                "id": "error2",
+                "name": "message",
+                "value": "Failed to generate valid SEO data",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          1552,
+          512
+        ],
+        "id": "error-result",
+        "name": "Error Result"
+      },
+      {
+        "parameters": {
+          "content": "## WordPress SEO Optimizer\n\n### Triggers:\n- **Manual** - Click to run\n- **Webhook** - POST to `/webhook/seo-optimize` with `{\"pageId\": \"123\"}`\n\n### Flow:\n1. Get WordPress page content\n2. Extract and clean text\n3. AI generates SEO elements\n4. Update page with optimized SEO\n\n### Output:\n- Optimized title (50-60 chars)\n- Meta description (150-155 chars)\n- Focus keyword\n- Secondary keywords\n- SEO-friendly slug\n- SEO score & recommendations",
+          "height": 380,
+          "width": 340
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          -304,
+          272
+        ],
+        "id": "sticky-note",
+        "name": "Sticky Note"
+      }
+    ],
+    "connections": {
+      "Manual Trigger": {
+        "main": [
+          [
+            {
+              "node": "Set Page ID",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Webhook Trigger": {
+        "main": [
+          [
+            {
+              "node": "Set Page ID",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Set Page ID": {
+        "main": [
+          [
+            {
+              "node": "Get WordPress Page",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get WordPress Page": {
+        "main": [
+          [
+            {
+              "node": "Extract Content",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract Content": {
+        "main": [
+          [
+            {
+              "node": "Generate SEO",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Generate SEO": {
+        "main": [
+          [
+            {
+              "node": "Parse SEO Output",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Parse SEO Output": {
+        "main": [
+          [
+            {
+              "node": "Validate SEO",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validate SEO": {
+        "main": [
+          [
+            {
+              "node": "Update WordPress Page",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error Result",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Update WordPress Page": {
+        "main": [
+          [
+            {
+              "node": "Success Result",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "cohen rayn",
+    "name": "Version 29212161",
+    "description": "",
+    "autosaved": true
+  },
+  "activeVersionId": "29212161-a3b8-455b-a21e-10e62fa67c65",
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Page ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Page ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Page ID": {
+      "main": [
+        [
+          {
+            "node": "Get WordPress Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get WordPress Page": {
+      "main": [
+        [
+          {
+            "node": "Extract Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Content": {
+      "main": [
+        [
+          {
+            "node": "Generate SEO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate SEO": {
+      "main": [
+        [
+          {
+            "node": "Parse SEO Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse SEO Output": {
+      "main": [
+        [
+          {
+            "node": "Validate SEO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate SEO": {
+      "main": [
+        [
+          {
+            "node": "Update WordPress Page",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update WordPress Page": {
+      "main": [
+        [
+          {
+            "node": "Success Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-02-21T07:28:16.436Z",
+  "id": "SfuyTMly9MC2ROOe",
+  "isArchived": false,
+  "meta": null,
+  "name": "WordPress SEO Optimizer",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        304
+      ],
+      "id": "manual-trigger",
+      "name": "Manual Trigger"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "seo-optimize",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        512
+      ],
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "webhookId": "641b1040-b001-429d-b61e-4b7cbbafb2d0"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "pageId",
+              "name": "pageId",
+              "value": "={{ $json.body?.pageId || '2473' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        400
+      ],
+      "id": "set-page-id",
+      "name": "Set Page ID"
+    },
+    {
+      "parameters": {
+        "resource": "page",
+        "operation": "get",
+        "pageId": "={{ $json.pageId }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        448,
+        400
+      ],
+      "id": "get-page",
+      "name": "Get WordPress Page",
+      "credentials": {
+        "wordpressApi": {
+          "id": "BLvROD2lSVQVPpRK",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract clean text from HTML content\nconst content = $json.content?.rendered || '';\nconst title = $json.title?.rendered || '';\nconst excerpt = $json.excerpt?.rendered || '';\nconst slug = $json.slug || '';\n\n// Remove HTML tags\nconst cleanContent = content.replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim();\nconst cleanExcerpt = excerpt.replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim();\n\nreturn [{\n  json: {\n    pageId: $json.id,\n    originalTitle: title,\n    originalSlug: slug,\n    originalExcerpt: cleanExcerpt,\n    contentPreview: cleanContent.substring(0, 2000),\n    contentLength: cleanContent.length,\n    wordCount: cleanContent.split(/\\s+/).length\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        400
+      ],
+      "id": "extract-content",
+      "name": "Extract Content"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an expert SEO specialist. Analyze this WordPress page and provide optimized SEO elements.\n\n## Current Page Data:\n- **Title:** {{ $json.originalTitle }}\n- **Slug:** {{ $json.originalSlug }}\n- **Excerpt:** {{ $json.originalExcerpt }}\n- **Word Count:** {{ $json.wordCount }}\n- **Content Preview:** {{ $json.contentPreview }}\n\n## Your Task:\nGenerate optimized SEO elements. Output ONLY valid JSON, no markdown or explanations.\n\n## Required JSON Output:\n```json\n{\n  \"seoTitle\": \"Optimized page title (50-60 chars, include primary keyword)\",\n  \"metaDescription\": \"Compelling meta description (150-155 chars, include CTA)\",\n  \"focusKeyword\": \"Primary keyword for this page\",\n  \"secondaryKeywords\": [\"keyword1\", \"keyword2\", \"keyword3\"],\n  \"optimizedSlug\": \"seo-friendly-url-slug\",\n  \"seoScore\": 85,\n  \"recommendations\": [\"Suggestion 1\", \"Suggestion 2\"]\n}\n```\n\n## SEO Best Practices:\n- Title: 50-60 characters, keyword near beginning\n- Meta Description: 150-155 characters, compelling CTA\n- Slug: Short, keyword-rich, hyphenated\n- Include action words and benefits"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        816,
+        400
+      ],
+      "id": "gemini-seo",
+      "name": "Generate SEO",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "XQdbTwWIGx543tas",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse SEO output from Gemini\nconst rawText = $json.content?.parts?.[0]?.text || $json.text || '';\n\nlet seoData;\ntry {\n  // Try direct parse\n  seoData = JSON.parse(rawText);\n} catch (e) {\n  // Extract JSON from text\n  const jsonMatch = rawText.match(/\\{[\\s\\S]*\\}/);\n  if (jsonMatch) {\n    seoData = JSON.parse(jsonMatch[0]);\n  } else {\n    throw new Error('Could not parse SEO JSON from AI response');\n  }\n}\n\n// Get pageId from previous node\nconst pageId = $('Extract Content').item.json.pageId;\nconst originalTitle = $('Extract Content').item.json.originalTitle;\n\nreturn [{\n  json: {\n    pageId,\n    originalTitle,\n    ...seoData\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1104,
+        400
+      ],
+      "id": "parse-seo",
+      "name": "Parse SEO Output"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-title",
+              "leftValue": "={{ $json.seoTitle }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1328,
+        400
+      ],
+      "id": "validate-seo",
+      "name": "Validate SEO"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://dogfoodandfun.padushka.com/wp-json/wp/v2/pages/{{ $json.pageId }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"title\": \"{{ $json.seoTitle }}\",\n  \"excerpt\": \"{{ $json.metaDescription }}\",\n  \"slug\": \"{{ $json.optimizedSlug }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1552,
+        304
+      ],
+      "id": "update-page",
+      "name": "Update WordPress Page",
+      "credentials": {
+        "wordpressApi": {
+          "id": "BLvROD2lSVQVPpRK",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "result",
+              "name": "status",
+              "value": "success",
+              "type": "string"
+            },
+            {
+              "id": "result2",
+              "name": "pageId",
+              "value": "={{ $('Parse SEO Output').item.json.pageId }}",
+              "type": "string"
+            },
+            {
+              "id": "result3",
+              "name": "seoTitle",
+              "value": "={{ $('Parse SEO Output').item.json.seoTitle }}",
+              "type": "string"
+            },
+            {
+              "id": "result4",
+              "name": "metaDescription",
+              "value": "={{ $('Parse SEO Output').item.json.metaDescription }}",
+              "type": "string"
+            },
+            {
+              "id": "result5",
+              "name": "focusKeyword",
+              "value": "={{ $('Parse SEO Output').item.json.focusKeyword }}",
+              "type": "string"
+            },
+            {
+              "id": "result6",
+              "name": "seoScore",
+              "value": "={{ $('Parse SEO Output').item.json.seoScore }}",
+              "type": "number"
+            },
+            {
+              "id": "result7",
+              "name": "recommendations",
+              "value": "={{ $('Parse SEO Output').item.json.recommendations }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        304
+      ],
+      "id": "success-result",
+      "name": "Success Result"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "error",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "error2",
+              "name": "message",
+              "value": "Failed to generate valid SEO data",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1552,
+        512
+      ],
+      "id": "error-result",
+      "name": "Error Result"
+    },
+    {
+      "parameters": {
+        "content": "## WordPress SEO Optimizer\n\n### Triggers:\n- **Manual** - Click to run\n- **Webhook** - POST to `/webhook/seo-optimize` with `{\"pageId\": \"123\"}`\n\n### Flow:\n1. Get WordPress page content\n2. Extract and clean text\n3. AI generates SEO elements\n4. Update page with optimized SEO\n\n### Output:\n- Optimized title (50-60 chars)\n- Meta description (150-155 chars)\n- Focus keyword\n- Secondary keywords\n- SEO-friendly slug\n- SEO score & recommendations",
+        "height": 380,
+        "width": 340
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -304,
+        272
+      ],
+      "id": "sticky-note",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n_flows",
+  "repo_owner": "galak06",
+  "repo_path": "workflows",
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionTimeout": 3600,
+    "timezone": "UTC",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-02-21T07:28:16.441Z",
+      "createdAt": "2026-02-21T07:28:16.441Z",
+      "role": "workflow:owner",
+      "workflowId": "SfuyTMly9MC2ROOe",
+      "projectId": "YaGVPyA24kD9PXTE"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-02-21T07:30:09.327Z",
+  "versionId": "29212161-a3b8-455b-a21e-10e62fa67c65"
+}
